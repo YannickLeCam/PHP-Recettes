@@ -1,0 +1,3 @@
+SELECT * 
+FROM RECIPE
+WHERE NAME LIKE '%Salade%';
