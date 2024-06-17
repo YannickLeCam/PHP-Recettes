@@ -1,0 +1,2 @@
+DELETE FROM RECIPE
+WHERE id_recipe = 2;
