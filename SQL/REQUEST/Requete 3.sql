@@ -1,3 +1,3 @@
 SELECT * 
 FROM RECIPE
-WHERE timeCook < 30;
+WHERE timeCook >= 30;

@@ -1,6 +1,5 @@
-SELECT recipe.name,ingredient.name,quantity,unitMeasure 
+SELECT recipe.name,COUNT(quantify.id_ingredient) 
 FROM RECIPE 
 INNER JOIN quantify
 ON RECIPE.id_recipe = QUANTIFY.id_recipe
-INNER JOIN INGREDIENT
-ON QUANTIFY.id_ingredient = INGREDIENT.id_ingredent;
+GROUP BY quantify.id_recipe;
