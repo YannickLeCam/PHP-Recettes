@@ -1,0 +1,9 @@
+#cardsBox{
+
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap:5%
+}
+h1{
+    text-align: center;
+}
