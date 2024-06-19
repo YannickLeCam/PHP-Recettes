@@ -49,49 +49,56 @@ function setIngredientsOptions(array $ingredients):string {
 
 <form method="post" action="./gestionRecette.php?from=./NewRecette.php">
     <h2>Details recette</h2>
-    <div class="d-flex">
-        <div class="form-floating mb-3 p-2 flex-fill">
-            <input type="text" class="form-control" id="floatingInputDisabled" name="nameRecette" placeholder="Nom de la recette">
-            <label for="floatingInputDisabled">Nom de la recette</label>
-        </div>
-
-        <div class="form-floating mb-3 p-2 flex-fill">
-            <input type="number" class="form-control" id="floatingInputDisabled" name="timeCook" placeholder="Durée de la préparation en minutes">
-            <label for="floatingInputDisabled">Durée de la préparation en minutes</label>
-        </div>
-        
-        <div class="p-2 flex-fill">
-            <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="typeMeal">
-                <option selected>Catégorie de plat</option>
-                <?=setTypeMealOptions($typeMeal)?>
-            </select>
-        </div>
-    </div>
-    <h2>Ingrédients</h2>
-    <div id="formIngredient">
-        <div class="d-flex" id="ingredientBox">
-            <div class="p-2 flex-fill">
-                <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="ingredient['id'][]">
-                    <option selected>Choisir un ingrédient</option>
-                    <?=setIngredientsOptions($ingredients)?>
-                </select>
+    <div id="form">
+        <div class="d-flex">
+            <div class="form-floating mb-3 p-2 flex-fill">
+                <input type="text" class="form-control" id="floatingInputDisabled" name="nameRecette" placeholder="Nom de la recette">
+                <label for="floatingInputDisabled">Nom de la recette</label>
             </div>
 
             <div class="form-floating mb-3 p-2 flex-fill">
-                <input type="number" class="form-control" id="floatingInputDisabled" name="ingredient['qtt'][]" placeholder="Quantité">
-                <label for="floatingInputDisabled">Quantité</label>
+                <input type="number" class="form-control" id="floatingInputDisabled" name="timeCook" placeholder="Durée de la préparation en minutes">
+                <label for="floatingInputDisabled">Durée de la préparation en minutes</label>
             </div>
-            <div class="buttonDeleteLine">
-                <i class="fa-solid fa-xmark"></i>
+            
+            <div class="p-2 flex-fill">
+                <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="typeMeal">
+                    <option selected>Catégorie de plat</option>
+                    <?=setTypeMealOptions($typeMeal)?>
+                </select>
             </div>
         </div>
-    </div>
-    <div id="buttonAddNewLineIngredient">
-        <i class="fa-solid fa-plus"></i>
-    </div>
-    
-    <h2>Instruction</h2>
+            <label for="formFileLg" class="form-label">Image de la recette :</label>
+            <input class="form-control form-control-lg" id="formFileLg" name="file" type="file">
+        <h2>Ingrédients</h2>
+        <div id="formIngredient">
+            <div class="d-flex" id="ingredientBox">
+                <div class="p-2 flex-fill">
+                    <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="ingredient['id'][]">
+                        <option selected>Choisir un ingrédient</option>
+                        <?=setIngredientsOptions($ingredients)?>
+                    </select>
+                </div>
 
+                <div class="form-floating mb-3 p-2 flex-fill">
+                    <input type="number" class="form-control" id="floatingInputDisabled" name="ingredient['qtt'][]" placeholder="Quantité">
+                    <label for="floatingInputDisabled">Quantité</label>
+                </div>
+                <div class="buttonDeleteLine">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+        </div>
+        <div id="buttonAddNewLineIngredient">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        
+        <h2>Instruction</h2>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" style="height: 40vh"></textarea>
+            <label for="floatingTextarea2">Entrer vos instructions a suivre pour votre Recette</label>
+        </div>
+    </div>
     <button name="submit" type="submit" class="btn btn-primary">Submit</button>
 </form>
 

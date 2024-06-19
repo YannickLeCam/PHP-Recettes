@@ -6,6 +6,7 @@ const boutonAddNewLine = document.getElementById("buttonAddNewLineIngredient").c
 const tabButtonDelete = document.getElementsByClassName("buttonDeleteLine");
 const formIngredient = document.getElementById("formIngredient");
 
+const modelNewLineIngredient = document.getElementById("ingredientBox");
 
 
 console.log(tabButtonDelete);
@@ -20,13 +21,13 @@ function updateEventListener() {
         })
     }
 }
+updateEventListener();
 
-//On le met apres le setter de la page pour qu'il copie aussi le addlistener
-const modelNewLineIngredient = document.getElementById("ingredientBox");
 boutonAddNewLine.addEventListener("click",function () {
     insertNode=modelNewLineIngredient.cloneNode(true);
     formIngredient.appendChild(insertNode);
     updateEventListener();
 })
+
 
 

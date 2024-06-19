@@ -7,7 +7,6 @@ try {
     );
     // Activer les erreurs PDO
     $mysqlClient->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully";
 } catch (Exception $e) {
     die("Erreur : " . $e->getMessage());
 }
