@@ -39,7 +39,7 @@ function setTypeMealOptions(array $typeMeals):string{
 function setIngredientsOptions(array $ingredients):string {
     $htmlContent = "";
     foreach ($ingredients as $ingredient) {
-        $htmlContent.='<option value"'.$ingredient['id_ingredent'].'">'.$ingredient['name'].'</option>'; // a modifier pour retirer les éléments qui sont deja dans la recette 
+        $htmlContent.='<option value="'.$ingredient['id_ingredent'].'">'.$ingredient['name'].'</option>'; // a modifier pour retirer les éléments qui sont deja dans la recette 
     }
     return $htmlContent;
 }
@@ -68,20 +68,22 @@ function setIngredientsOptions(array $ingredients):string {
         </div>
     </div>
     <h2>Ingrédients</h2>
-    <div class="d-flex" id="ingredientBox">
-        <div class="p-2 flex-fill">
-            <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="typeMeal">
-                <option selected>Choisir un ingrédient</option>
-                <?=setIngredientsOptions($ingredients)?>
-            </select>
-        </div>
+    <div id="formIngredient">
+        <div class="d-flex" id="ingredientBox">
+            <div class="p-2 flex-fill">
+                <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="ingredient['id'][]">
+                    <option selected>Choisir un ingrédient</option>
+                    <?=setIngredientsOptions($ingredients)?>
+                </select>
+            </div>
 
-        <div class="form-floating mb-3 p-2 flex-fill">
-            <input type="number" class="form-control" id="floatingInputDisabled" name="quantite" placeholder="Quantité">
-            <label for="floatingInputDisabled">Quantité</label>
-        </div>
-        <div class="buttonDeleteLine">
-            <i class="fa-solid fa-xmark"></i>
+            <div class="form-floating mb-3 p-2 flex-fill">
+                <input type="number" class="form-control" id="floatingInputDisabled" name="ingredient['qtt'][]" placeholder="Quantité">
+                <label for="floatingInputDisabled">Quantité</label>
+            </div>
+            <div class="buttonDeleteLine">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
         </div>
     </div>
     <div id="buttonAddNewLineIngredient">

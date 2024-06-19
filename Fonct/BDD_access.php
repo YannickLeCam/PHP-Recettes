@@ -25,7 +25,7 @@ try {
 function getTypeMealTab(PDO $mysqlClient):array{
     $processRequest = $mysqlClient->prepare("SELECT * FROM type");
     $processRequest->execute();
-    $typeMeal = $processRequest->fetchAll();
+    $typeMeal = $processRequest->fetchAll(PDO::FETCH_NAMED);
     return $typeMeal;
 }
 
@@ -44,7 +44,7 @@ function getTypeMealTab(PDO $mysqlClient):array{
 function getIngredients(PDO $mysqlClient):array{
     $processRequest = $mysqlClient->prepare("SELECT * FROM ingredient");
     $processRequest->execute();
-    $ingredient = $processRequest->fetchAll();
+    $ingredient = $processRequest->fetchAll(PDO::FETCH_NAMED);
     return $ingredient;
 }
 
