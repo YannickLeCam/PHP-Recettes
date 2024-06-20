@@ -49,6 +49,23 @@ function getIngredients(PDO $mysqlClient):array{
 }
 
 /**
+ * This PHP function retrieves all recipes from a database using a PDO connection and returns them as
+ * an array.
+ * 
+ * @param PDO mysqlClient The `mysqlClient` parameter in the `getRecipeTab` function is of type `PDO`,
+ * which is a PHP data object representing a connection between PHP and a database server. In this
+ * case, it is used to interact with a MySQL database to retrieve recipe data.
+ * 
+ * @return array An array of recipes is being returned.
+ */
+function getRecipeTab(PDO $mysqlClient):array{
+    $processRequest = $mysqlClient->prepare("SELECT * FROM recipe");
+    $processRequest->execute();
+    $recipe = $processRequest->fetchAll(PDO::FETCH_NAMED);
+    return $recipe;
+}
+
+/**
  * The function checks if a given type of meal exists in a database table.
  * 
  * @param PDO mysqlClient The `mysqlClient` parameter is an instance of the PDO class in PHP, which
@@ -103,4 +120,6 @@ function inBDDIngredients(PDO $mysqlClient , array $ingredients):bool{
     }
     return true;
 }
+
+
 ?>

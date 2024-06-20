@@ -1,6 +1,7 @@
 <?php
 ob_start();
 $title = "Recettes";
+
 ?>
 
 <h1>Le livre de Recettes</h1>

@@ -50,8 +50,6 @@ function checkDoubleIngredient(array $tabIdIngredient):bool{
     }
     return false;
 }
-var_dump($_POST);
-die;
 if (isset($_POST['submit'])) {
     /**
      * Verification de la présence des attributs OBLIGATOIRE
@@ -103,16 +101,11 @@ if (isset($_POST['submit'])) {
      * don't forgot to add recipe image attribute
      */
     if (isset($_FILES['file'])) {
-        if (!empty($_FILES['file']['error'])) {
-            setMessage("error","Erreur dans l'upload de l'image \n".$_FILES['file']["error"]);
-            $image=null;
-        }else{
-            $image=uploadImg($_FILES['file']);
-        }
-        
+        $image=uploadImg($_FILES['file']);
     }else {
         $image=null;
     }
+
     /**
      * Ingredients checking
      */
@@ -124,13 +117,24 @@ if (isset($_POST['submit'])) {
                 redirection("./NewRecette.php");
             }else {
                 $ingredients=[];
-                if (checkDoubleIngredient($_POST['ingredient']['id'])) {
+                $args = [
+                    "id" => array(
+                        'filter' => FILTER_VALIDATE_INT,
+                        'flags' => FILTER_FORCE_ARRAY
+                    ),
+                    "qtt" => array(
+                        'filter' => FILTER_VALIDATE_FLOAT,
+                        'flags' => FILTER_FORCE_ARRAY
+                    )
+                ];
+                $ingredientsSaint=filter_var_array($_POST['ingredient'],$args);
+                if (checkDoubleIngredient($ingredientsSaint)) {
                     setMessage('error','Un ingrédient été retrouvé en double dans la recette . . .');
                     redirection("./NewRecette.php");
                 }
-                foreach ($_POST['ingredient']['id'] as $key => $value) {
-                    $ingredients[$key]['id']=(int) $_POST['ingredient']['id'][$key]; //A DEMANDER A MICKAEL COMMENT UTILISER FILTER-INPUT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    $ingredients[$key]['qtt']=(int) $_POST['ingredient']['qtt'][$key];
+                foreach ($ingredientsSaint['id'] as $key => $value) {
+                    $ingredients[$key]['id']=(int) $ingredientsSaint['id'][$key]; 
+                    $ingredients[$key]['qtt']=(int) $ingredientsSaint['qtt'][$key];
                 }
                 if(!inBDDIngredients($mysqlClient,$ingredients)){
                     setMessage("error","Il semble avoir une erreur sur l'entrée de vos ingrédients . . .");
@@ -140,14 +144,17 @@ if (isset($_POST['submit'])) {
         }
     }
     /**
-     * Happy end !
+     * data is good !
+     * So happy end !
      */
     try {
-        $queryInsertRecipe = $mysqlClient->prepare("INSERT INTO  recipe (name, instruction,timeCook,id_type ) VALUES (:name, :instruction, :timeCook ,:id_type)");
+        $queryInsertRecipe = $mysqlClient->prepare("INSERT INTO  recipe (name, instruction,timeCook,id_type,image ) VALUES (:name, :instruction, :timeCook ,:id_type,:image)");
         $queryInsertRecipe->bindParam(":name", $nameRecette);
         $queryInsertRecipe->bindParam(":instruction", $instructions);
         $queryInsertRecipe->bindParam(":timeCook", $timeCook);
         $queryInsertRecipe->bindParam(":id_type",$typeMeal);
+        $queryInsertRecipe->bindParam(":image",$image);
+
         if ($queryInsertRecipe->execute()){
             // continue to add with the link Ingredients/Recipe/qtt
             $idRecipe = $mysqlClient->lastInsertId();
@@ -162,10 +169,10 @@ if (isset($_POST['submit'])) {
                         redirection("./NewRecette.php");
                     }
                 }
-                setMessage("sucess","La recette a bien été enregistré !");
+                setMessage("success","La recette a bien été enregistré !");
                 redirection("./NewRecette.php");
             }else {
-                setMessage("sucess","La recette a bien été enregistré ! (Sans ingrédients)");
+                setMessage("success","La recette a bien été enregistré ! (Sans ingrédients)");
                 redirection("./NewRecette.php");
             }
 

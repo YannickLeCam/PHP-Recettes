@@ -36,6 +36,7 @@ $mainColor="#ffa07a";
     <?php
     if (isset($_SESSION['success'])) {
         $msg = $_SESSION['success'];
+        $_SESSION=[];
         echo <<<HTML
         <div class="alert alert-success" role="alert">
             $msg
@@ -44,6 +45,7 @@ HTML;
     }
     if (isset($_SESSION['error'])) {
         $msg = $_SESSION['error'];
+        $_SESSION=[];
         echo <<<HTML
         <div class="alert alert-danger" role="alert">
             $msg
