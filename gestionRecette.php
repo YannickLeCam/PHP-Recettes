@@ -39,6 +39,7 @@ if (isset($_POST['submit'])) {
      */
     if (isset($_POST['nameRecette'])) {
        $nameRecette = htmlentities($_POST['nameRecette']);
+
        if ($nameRecette=="") {
             setMessage("error","Nom de la Recette manquant . . .");
             redirection();
@@ -80,6 +81,7 @@ if (isset($_POST['submit'])) {
 
     /**
      * file checking if invalid/no image then $image ==null
+     * don't forgot to add recipe image attribute
      */
     if (isset($_FILES['file'])) {
         if (!empty($_FILES['file']['error'])) {
@@ -92,8 +94,24 @@ if (isset($_POST['submit'])) {
     }else {
         $image=null;
     }
+    /**
+     * Ingredients checking
+     */
+    if (isset($_POST['ingredient'])) {
+        if (isset($_POST['ingredient']['id']) && isset($_POST['ingredient']['qtt'])) {
+            if (count($_POST['ingredient']['id'])!=count($_POST['ingredient']['qtt'])) {
+                setMessage('error','Une quantité ou un ingrédient semble avoir été oublié . . .');
+                redirection();
+            }else {
+                $ingredient=[];
+                foreach ($_POST['ingredient']['id'] as $key => $value) {
+                    $ingredient[$key]['id']=$_POST['ingredient']['id'][$key];
+                    $ingredient[$key]['qtt']=$_POST['ingredient']['qtt'][$key];
+                }
+            }
+        }
+    }
 }
-
 
 redirection();
 
