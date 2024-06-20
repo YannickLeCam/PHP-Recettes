@@ -50,7 +50,8 @@ function checkDoubleIngredient(array $tabIdIngredient):bool{
     }
     return false;
 }
-
+var_dump($_POST);
+die;
 if (isset($_POST['submit'])) {
     /**
      * Verification de la présence des attributs OBLIGATOIRE
@@ -120,21 +121,20 @@ if (isset($_POST['submit'])) {
             
             if (count($_POST['ingredient']['id'])!=count($_POST['ingredient']['qtt'])) {
                 setMessage('error','Une quantité ou un ingrédient semble avoir été oublié . . .');
-                redirection();
+                redirection("./NewRecette.php");
             }else {
                 $ingredients=[];
                 if (checkDoubleIngredient($_POST['ingredient']['id'])) {
                     setMessage('error','Un ingrédient été retrouvé en double dans la recette . . .');
-                    redirection();
+                    redirection("./NewRecette.php");
                 }
                 foreach ($_POST['ingredient']['id'] as $key => $value) {
-
                     $ingredients[$key]['id']=(int) $_POST['ingredient']['id'][$key]; //A DEMANDER A MICKAEL COMMENT UTILISER FILTER-INPUT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     $ingredients[$key]['qtt']=(int) $_POST['ingredient']['qtt'][$key];
                 }
                 if(!inBDDIngredients($mysqlClient,$ingredients)){
                     setMessage("error","Il semble avoir une erreur sur l'entrée de vos ingrédients . . .");
-                    redirection(); //Cancel because it's a suspect situation
+                    redirection("./NewRecette.php"); //Cancel because it's a suspect situation
                 }
             }
         }
@@ -142,8 +142,45 @@ if (isset($_POST['submit'])) {
     /**
      * Happy end !
      */
+    try {
+        $queryInsertRecipe = $mysqlClient->prepare("INSERT INTO  recipe (name, instruction,timeCook,id_type ) VALUES (:name, :instruction, :timeCook ,:id_type)");
+        $queryInsertRecipe->bindParam(":name", $nameRecette);
+        $queryInsertRecipe->bindParam(":instruction", $instructions);
+        $queryInsertRecipe->bindParam(":timeCook", $timeCook);
+        $queryInsertRecipe->bindParam(":id_type",$typeMeal);
+        if ($queryInsertRecipe->execute()){
+            // continue to add with the link Ingredients/Recipe/qtt
+            $idRecipe = $mysqlClient->lastInsertId();
+            if (isset($ingredients)) {
+                foreach ($ingredients as $ingredient) {
+                    $queryInsertIngredient = $mysqlClient->prepare("INSERT INTO quantify (quantity,id_ingredient,id_recipe) VALUES (:quantity,:id_ingredient,:id_recipe)");
+                    $queryInsertIngredient->bindParam(":quantity",$ingredient["qtt"]);
+                    $queryInsertIngredient->bindParam(":id_ingredient",$ingredient['id']);
+                    $queryInsertIngredient->bindParam(":id_recipe",$idRecipe);
+                    if (!$queryInsertIngredient->execute()) {
+                        setMessage("error","Probleme lors de l'insertion dans la base de donnée (QUANTIFY) . . ."); //Les parenthèqe vont disparaitre dans plus tard ! 
+                        redirection("./NewRecette.php");
+                    }
+                }
+                setMessage("sucess","La recette a bien été enregistré !");
+                redirection("./NewRecette.php");
+            }else {
+                setMessage("sucess","La recette a bien été enregistré ! (Sans ingrédients)");
+                redirection("./NewRecette.php");
+            }
+
+
+        }else {
+            setMessage("error","Probleme lors de l'insertion dans la base de donnée (RECIPE) . . .");
+            redirection("./NewRecette.php");
+        }
+    } catch (Exception $e) {
+        setMessage("error","Probleme lors de l'insertion dans la base de donnée (RECIPE) . . . \n $e");
+        redirection("./NewRecette.php");
+    }
 
     echo "<pre>";
+    
     var_dump($_SESSION);
     var_dump($ingredients);
     var_dump($nameRecette);

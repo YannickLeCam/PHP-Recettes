@@ -83,7 +83,7 @@ function setIngredientsOptions(array $ingredients):string {
 
                 <div class="form-floating mb-3 p-2 flex-fill">
                     <input type="number" class="form-control" id="floatingInputDisabled" name="ingredient[qtt][]" placeholder="Quantité">
-                    <label for="floatingInputDisabled">Quantité</label>
+                    <label for="floatingInputDisabled" class="floatingLabel">Quantité</label>
                 </div>
                 <div class="buttonDeleteLine">
                     <i class="fa-solid fa-xmark"></i>
