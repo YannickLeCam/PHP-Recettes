@@ -28,6 +28,25 @@ function getTypeMealTab(PDO $mysqlClient):array{
     return $typeMeal;
 }
 
+/**
+ * This PHP function retrieves a specific type of meal from a database table based on the provided ID.
+ * 
+ * @param PDO mysqlClient The `` parameter is an instance of the PDO class, which is used
+ * to interact with a database in PHP. It represents a connection to a MySQL database and allows you to
+ * perform various database operations like querying, inserting, updating, and deleting data.
+ * @param int id The `id` parameter in the `getTypeMealTabById` function is used to specify the ID of
+ * the type of meal that you want to retrieve from the database. This ID is used in the SQL query to
+ * fetch the specific type of meal information from the `type` table based on the provided
+ * 
+ * @return array An array containing the details of the meal type with the specified ID from the
+ * database table.
+ */
+function getTypeMealTabById(PDO $mysqlClient,int $id):array{
+    $processRequest = $mysqlClient->prepare("SELECT typeMeal FROM type WHERE id_type=$id");
+    $processRequest->execute();
+    $typeMeal = $processRequest->fetchAll(PDO::FETCH_NAMED);
+    return $typeMeal;
+}
 
 /**
  * This PHP function retrieves all ingredients from a database using a PDO MySQL client and returns

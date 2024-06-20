@@ -10,6 +10,10 @@
     grid-template-columns: auto auto auto auto;
     gap:5%
 }
+
+.card{
+    max-height: 30vh;
+}
 h1{
     text-align: center;
     color: var(--main);
