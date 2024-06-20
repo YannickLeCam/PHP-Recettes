@@ -32,6 +32,25 @@ function uploadImg($file){
 }
 
 
+/**
+ * The function `checkDoubleIngredient` checks if there are any duplicate ingredients in an array.
+ * 
+ * @param array tabIdIngredient An array containing the IDs of ingredients.
+ * 
+ * @return bool The function `checkDoubleIngredient` returns a boolean value. It returns `true` if
+ * there is at least one ingredient that occurs more than once in the input array ``,
+ * otherwise it returns `false`.
+ */
+function checkDoubleIngredient(array $tabIdIngredient):bool{
+    $occurence=array_count_values($tabIdIngredient);
+    foreach ($occurence as $value) {
+        if ($value>1) {
+            return true;
+        }
+    }
+    return false;
+}
+
 if (isset($_POST['submit'])) {
     /**
      * Verification de la présence des attributs OBLIGATOIRE
@@ -104,7 +123,12 @@ if (isset($_POST['submit'])) {
                 redirection();
             }else {
                 $ingredients=[];
+                if (checkDoubleIngredient($_POST['ingredient']['id'])) {
+                    setMessage('error','Un ingrédient été retrouvé en double dans la recette . . .');
+                    redirection();
+                }
                 foreach ($_POST['ingredient']['id'] as $key => $value) {
+
                     $ingredients[$key]['id']=(int) $_POST['ingredient']['id'][$key]; //A DEMANDER A MICKAEL COMMENT UTILISER FILTER-INPUT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     $ingredients[$key]['qtt']=(int) $_POST['ingredient']['qtt'][$key];
                 }
