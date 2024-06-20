@@ -28,6 +28,7 @@ function getTypeMealTab(PDO $mysqlClient):array{
     return $typeMeal;
 }
 
+
 /**
  * This PHP function retrieves all ingredients from a database using a PDO MySQL client and returns
  * them as an array.
@@ -47,6 +48,27 @@ function getIngredients(PDO $mysqlClient):array{
     return $ingredient;
 }
 
-
+/**
+ * The function checks if a given type of meal exists in a database table.
+ * 
+ * @param PDO mysqlClient The `mysqlClient` parameter is an instance of the PDO class in PHP, which
+ * represents a connection to a MySQL database. It is used to interact with the database by executing
+ * queries and fetching results.
+ * @param idTypeMeal The `inBDDTypeMeal` function takes a PDO object `` and an
+ * `` as parameters. The function checks if the `` exists in the array of type
+ * meals fetched from the database using the `getTypeMealTab` function.
+ * 
+ * @return bool The function `inBDDTypeMeal` is returning a boolean value - `true` if the ``
+ * is found in the `id_type` field of the `` array, and `false` otherwise.
+ */
+function inBDDTypeMeal(PDO $mysqlClient , int $idTypeMeal):bool{
+    $tabTypeMeal=getTypeMealTab($mysqlClient);
+    foreach ($tabTypeMeal as $typeMeal) {
+        if ($idTypeMeal==$typeMeal["id_type"]) {
+            return true;
+        }
+    }
+    return false;
+}
 
 ?>

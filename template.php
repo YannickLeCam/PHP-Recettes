@@ -13,26 +13,44 @@ $mainColor="#ffa07a";
 </head>
 <body>
     <nav class="navbar navbar-expand-lg" style="background-color: <?=$mainColor?>;">   
-    <div class="container-fluid">
-        <a class="navbar-brand" href="./index.php">Salmoner Rift</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            <a class="nav-link <?=$title=="Home" ? "active" : ""?>" aria-current="page" href="./index.php">Home</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link <?=$title=="Recettes" ? "active" : ""?>" href="./Recettes.php">Recettes</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link <?=$title=="Nouvelle Recette" ? "active" : ""?>" href="./NewRecette.php">Nouvelle Recette</a>
-            </li>
-        </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./index.php">Salmoner Rift</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                <a class="nav-link <?=$title=="Home" ? "active" : ""?>" aria-current="page" href="./index.php">Home</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link <?=$title=="Recettes" ? "active" : ""?>" href="./Recettes.php">Recettes</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link <?=$title=="Nouvelle Recette" ? "active" : ""?>" href="./NewRecette.php">Nouvelle Recette</a>
+                </li>
+            </ul>
+            </div>
         </div>
-    </div>
     </nav>
+    <?php
+    if (isset($_SESSION['success'])) {
+        $msg = $_SESSION['success'];
+        echo <<<HTML
+        <div class="alert alert-success" role="alert">
+            $msg
+        </div>
+HTML;
+    }
+    if (isset($_SESSION['error'])) {
+        $msg = $_SESSION['error'];
+        echo <<<HTML
+        <div class="alert alert-danger" role="alert">
+            $msg
+        </div>
+HTML;
+    }
+    ?>
     <?=$content?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="JS/script.js"></script>

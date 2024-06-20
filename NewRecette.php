@@ -1,4 +1,5 @@
 <?php
+session_start();
 ob_start();
 require_once './Fonct/BDD_access.php';
 $title = "Nouvelle Recette";
@@ -47,7 +48,7 @@ function setIngredientsOptions(array $ingredients):string {
 
 <h1>Entrez votre nouvelle Recette</h1>
 
-<form method="post" action="./gestionRecette.php?from=./NewRecette.php">
+<form method="post" action="./gestionRecette.php?from=./NewRecette.php" enctype="multipart/form-data">
     <h2>Details recette</h2>
     <div id="form">
         <div class="d-flex">
@@ -63,7 +64,7 @@ function setIngredientsOptions(array $ingredients):string {
             
             <div class="p-2 flex-fill">
                 <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="typeMeal">
-                    <option selected>Catégorie de plat</option>
+                    <option value="0" selected>Catégorie de plat</option>
                     <?=setTypeMealOptions($typeMeal)?>
                 </select>
             </div>
@@ -95,7 +96,7 @@ function setIngredientsOptions(array $ingredients):string {
         
         <h2>Instruction</h2>
         <div class="form-floating">
-            <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" style="height: 40vh"></textarea>
+            <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" name="instructions" style="height: 40vh"></textarea>
             <label for="floatingTextarea2">Entrer vos instructions a suivre pour votre Recette</label>
         </div>
     </div>
