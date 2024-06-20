@@ -2,8 +2,7 @@
 session_start();
 require_once 'Fonct/errorController.php';
 require_once 'Fonct/BDD_access.php';
-var_dump($_POST);
-die();
+
 
 function uploadImg($file){
     $tmp_name=$file['tmp_name'];
@@ -38,15 +37,15 @@ if (isset($_POST['submit'])) {
      * Verification de la présence des attributs OBLIGATOIRE
      */
     if (isset($_POST['nameRecette'])) {
-       $nameRecette = htmlentities($_POST['nameRecette']);
+       $nameRecette = filter_input(INPUT_POST,"nameRecette",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
        if ($nameRecette=="") {
             setMessage("error","Nom de la Recette manquant . . .");
-            redirection();
+            redirection("./NewRecette.php");
        }
     }else {
         setMessage("error","Nom de la Recette manquant . . .");
-        redirection();
+        redirection("./NewRecette.php");
     }
     if (isset($_POST['timeCook'])) {
         $timeCook = filter_input(INPUT_POST,"timeCook",FILTER_VALIDATE_INT);
@@ -55,28 +54,28 @@ if (isset($_POST['submit'])) {
         }
     }else {
         setMessage("error","Le temps de préparation manquant . . .");
-        redirection();
+        redirection("./NewRecette.php");
     }
     if (isset($_POST['typeMeal'] )|| $_POST['typeMeal']==0) {
         $typeMeal = filter_input(INPUT_POST,"typeMeal",FILTER_VALIDATE_INT);
         if (!inBDDTypeMeal($mysqlClient , $typeMeal)) {
             setMessage("error","La catégorie de repas semble être invalide . . .");
-            redirection();
+            redirection("./NewRecette.php");
         }
 
     }else {
         setMessage("error","La catégorie de repas est manquant . . .");
-        redirection();
+        redirection("./NewRecette.php");
     }
     if (isset($_POST['instructions'])) {
-        $instructions = htmlentities($_POST['instructions']);
+        $instructions = filter_input(INPUT_POST,"instructions",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         if ($instructions == "") {
             setMessage("error","Il semble manquer des instructions . . .");
-            redirection();
+            redirection("./NewRecette.php");
         }
     }else {
         setMessage("error","Il semble manquer des instructions . . .");
-        redirection();
+        redirection("./NewRecette.php");
     }
 
     /**
@@ -99,6 +98,7 @@ if (isset($_POST['submit'])) {
      */
     if (isset($_POST['ingredient'])) {
         if (isset($_POST['ingredient']['id']) && isset($_POST['ingredient']['qtt'])) {
+            
             if (count($_POST['ingredient']['id'])!=count($_POST['ingredient']['qtt'])) {
                 setMessage('error','Une quantité ou un ingrédient semble avoir été oublié . . .');
                 redirection();
@@ -108,14 +108,27 @@ if (isset($_POST['submit'])) {
                     $ingredients[$key]['id']=(int) $_POST['ingredient']['id'][$key]; //A DEMANDER A MICKAEL COMMENT UTILISER FILTER-INPUT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     $ingredients[$key]['qtt']=(int) $_POST['ingredient']['qtt'][$key];
                 }
-                //verification si les ingrédient existe
-                if(inBDDIngredients($mysqlClient,$ingredients)){
-
+                if(!inBDDIngredients($mysqlClient,$ingredients)){
+                    setMessage("error","Il semble avoir une erreur sur l'entrée de vos ingrédients . . .");
+                    redirection(); //Cancel because it's a suspect situation
                 }
             }
         }
     }
-    
+    /**
+     * Happy end !
+     */
+
+    echo "<pre>";
+    var_dump($_SESSION);
+    var_dump($ingredients);
+    var_dump($nameRecette);
+    var_dump($instructions);
+    var_dump($timeCook);
+    var_dump($typeMeal);
+    echo "</pre>";
+    die();
+    redirection("./NewRecette.php");
 }
 
 redirection();

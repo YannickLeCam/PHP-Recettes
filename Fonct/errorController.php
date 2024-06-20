@@ -22,13 +22,9 @@ function setMessage(string $type,string $msg):void{
  * The function `redirection` redirects the user to a specified URL if the "from" parameter is set in
  * the GET request, otherwise it redirects to the index page.
  */
-function redirection():void{
-    if (isset($_GET["from"])) {
-        $provenance = $_GET["from"];
-        header("Location:$provenance");
-    }else {
-        header("Location:./index.php");
-    }
+function redirection(string $dirrection="./index.php"):void{
+ 
+    header("Location:$dirrection");
 }
 
 

@@ -71,6 +71,22 @@ function inBDDTypeMeal(PDO $mysqlClient , int $idTypeMeal):bool{
     return false;
 }
 
+/**
+ * The function `inBDDIngredients` checks if all ingredients in an array exist in a database table.
+ * 
+ * @param PDO mysqlClient The `mysqlClient` parameter is an instance of the PDO class, which represents
+ * a connection to a MySQL database. It is used to interact with the database to retrieve information
+ * about ingredients.
+ * @param array ingredients The `inBDDIngredients` function takes a PDO object `` and an
+ * array of ingredients `` as parameters. It checks if all the ingredients in the
+ * `` array exist in the database by comparing their IDs with the IDs of ingredients
+ * fetched from the database using the `get
+ * 
+ * @return bool The function `inBDDIngredients` returns a boolean value - `true` if all the ingredients
+ * in the provided array exist in the database (based on the comparison with the ingredients fetched
+ * from the database), and `false` if any of the ingredients in the provided array do not exist in the
+ * database.
+ */
 function inBDDIngredients(PDO $mysqlClient , array $ingredients):bool{
     $tabIngredient=getIngredients($mysqlClient);
     foreach ($ingredients as $ingredient) {

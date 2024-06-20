@@ -75,14 +75,14 @@ function setIngredientsOptions(array $ingredients):string {
         <div id="formIngredient">
             <div class="d-flex" id="ingredientBox">
                 <div class="p-2 flex-fill">
-                    <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="ingredient['id'][]">
+                    <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="ingredient[id][]">
                         <option selected>Choisir un ingrédient</option>
                         <?=setIngredientsOptions($ingredients)?>
                     </select>
                 </div>
 
                 <div class="form-floating mb-3 p-2 flex-fill">
-                    <input type="number" class="form-control" id="floatingInputDisabled" name="ingredient['qtt'][]" placeholder="Quantité">
+                    <input type="number" class="form-control" id="floatingInputDisabled" name="ingredient[qtt][]" placeholder="Quantité">
                     <label for="floatingInputDisabled">Quantité</label>
                 </div>
                 <div class="buttonDeleteLine">
