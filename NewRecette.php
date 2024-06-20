@@ -53,17 +53,17 @@ function setIngredientsOptions(array $ingredients):string {
     <div id="form">
         <div class="d-flex">
             <div class="form-floating mb-3 p-2 flex-fill">
-                <input type="text" class="form-control" id="floatingInputDisabled" name="nameRecette" placeholder="Nom de la recette">
+                <input type="text" class="form-control" id="floatingInputDisabled" name="nameRecette" placeholder="Nom de la recette" required>
                 <label for="floatingInputDisabled">Nom de la recette</label>
             </div>
 
             <div class="form-floating mb-3 p-2 flex-fill">
-                <input type="number" class="form-control" id="floatingInputDisabled" name="timeCook" placeholder="Durée de la préparation en minutes">
+                <input type="number" class="form-control" id="floatingInputDisabled" name="timeCook" placeholder="Durée de la préparation en minutes" required>
                 <label for="floatingInputDisabled">Durée de la préparation en minutes</label>
             </div>
             
             <div class="p-2 flex-fill">
-                <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="typeMeal">
+                <select class="form-select form-select-lg mb-3 " aria-label="Large select example" name="typeMeal" required>
                     <option value="0" selected>Catégorie de plat</option>
                     <?=setTypeMealOptions($typeMeal)?>
                 </select>
@@ -96,7 +96,7 @@ function setIngredientsOptions(array $ingredients):string {
         
         <h2>Instruction</h2>
         <div class="form-floating">
-            <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" name="instructions" style="height: 40vh"></textarea>
+            <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" name="instructions" style="height: 40vh" required></textarea>
             <label for="floatingTextarea2">Entrer vos instructions a suivre pour votre Recette</label>
         </div>
     </div>

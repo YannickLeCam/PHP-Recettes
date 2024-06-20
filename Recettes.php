@@ -17,7 +17,7 @@ $title = "Recettes";
     </div>
 
     <div class="card">
-    <img src="..." class="card-img-top" alt="...">
+    <img src="https://th.bing.com/th/id/OIP.avb9nDfw3kq7NOoP0grM4wHaEK?rs=1&pid=ImgDetMain" class="card-img-top" alt="...">
 
     <div class="card-body">
         <h5 class="card-title">Card title <span class="badge text-bg-secondary">Plat</span></h5>
