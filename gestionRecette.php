@@ -103,14 +103,19 @@ if (isset($_POST['submit'])) {
                 setMessage('error','Une quantité ou un ingrédient semble avoir été oublié . . .');
                 redirection();
             }else {
-                $ingredient=[];
+                $ingredients=[];
                 foreach ($_POST['ingredient']['id'] as $key => $value) {
-                    $ingredient[$key]['id']=$_POST['ingredient']['id'][$key];
-                    $ingredient[$key]['qtt']=$_POST['ingredient']['qtt'][$key];
+                    $ingredients[$key]['id']=(int) $_POST['ingredient']['id'][$key]; //A DEMANDER A MICKAEL COMMENT UTILISER FILTER-INPUT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    $ingredients[$key]['qtt']=(int) $_POST['ingredient']['qtt'][$key];
+                }
+                //verification si les ingrédient existe
+                if(inBDDIngredients($mysqlClient,$ingredients)){
+
                 }
             }
         }
     }
+    
 }
 
 redirection();

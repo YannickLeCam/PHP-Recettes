@@ -71,4 +71,20 @@ function inBDDTypeMeal(PDO $mysqlClient , int $idTypeMeal):bool{
     return false;
 }
 
+function inBDDIngredients(PDO $mysqlClient , array $ingredients):bool{
+    $tabIngredient=getIngredients($mysqlClient);
+    foreach ($ingredients as $ingredient) {
+        $checker=false;
+        foreach ($tabIngredient as $ingredientBDD) {
+            if ($ingredientBDD['id_ingredent']==$ingredient['id']) {
+                $checker=true;
+            }
+        }
+        if (!$checker) {
+            return false;
+        }
+        $checker=false;
+    }
+    return true;
+}
 ?>
