@@ -82,7 +82,7 @@ function setIngredientsOptions(array $ingredients):string {
                 </div>
 
                 <div class="form-floating mb-3 p-2 flex-fill">
-                    <input type="number" step="0.00001" class="form-control" id="floatingInputDisabled" name="ingredient[qtt][]" placeholder="Quantité">
+                    <input type="text" class="form-control" id="floatingInputDisabled" name="ingredient[qtt][]" placeholder="Quantité">
                     <label for="floatingInputDisabled" class="floatingLabel">Quantité</label>
                 </div>
                 <div class="buttonDeleteLine">
@@ -103,7 +103,7 @@ function setIngredientsOptions(array $ingredients):string {
     <button name="submit" type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<script src="JS/script.js"></script>
+<script src="JS/scriptNewRecette.js"></script>
 <?php
 $content = ob_get_clean();
 require_once './template.php';

@@ -140,5 +140,33 @@ function inBDDIngredients(PDO $mysqlClient , array $ingredients):bool{
     return true;
 }
 
+/**
+ * The function `getRecipeDetail` retrieves detailed information about a recipe, including recipe
+ * details, type of recipe, and ingredients with quantities.
+ * 
+ * @param PDO mysqlClient The function `getRecipeDetail` takes two parameters:
+ * @param int id_recipe The function `getRecipeDetail` takes two parameters:
+ * 
+ * @return array This function is returning an array containing recipe details, including the recipe
+ * itself, its type, and the ingredients with their quantities and prices.
+ */
+function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
+    $recipeDetail = [];
+    //In first take the recipe details
+    $recipeQuery = $mysqlClient->prepare("SELECT * FROM recipe WHERE id_recipe=$id_recipe");
+    $recipeQuery->execute();
+    $recipe = $recipeQuery->fetchAll(PDO::FETCH_NAMED);
+    $recipeDetail["recipe"]=$recipe;
+    //After we complete the detail with the type of recipe
+    $typeMeal = getTypeMealTabById($mysqlClient,$recipe["id_type"]);
+    $recipeDetail["recipe"]["type"] = $typeMeal;
+    //Finally we take all ingredients about the recipe with the quentity
+    $ingredientsRequest = $mysqlClient->prepare("SELECT name,quantity,unitMeasure,price FROM ingredient INNER JOIN quantify ON quantify.id_ingredient = ingredient.id_ingredent WHERE id_recipe = $id_recipe;");
+    $ingredientsRequest->execute();
+    $ingredients=$ingredientsRequest->fetchAll(PDO::FETCH_NAMED);
+    $recipeDetail["ingredients"]=$ingredients;
+
+    return $recipeDetail;
+}
 
 ?>

@@ -159,7 +159,7 @@ form .btn{
     color: var(--main);
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1100px) {
     #cardsBox{
         grid-template-columns: auto auto;
     }
