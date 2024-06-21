@@ -4,6 +4,7 @@ ob_start();
 require_once './Fonct/BDD_access.php';
 $title = "Nouvelle Recette";
 
+
 $typeMeal=getTypeMealTab($mysqlClient);
 $ingredients = getIngredients($mysqlClient);
 
@@ -45,7 +46,12 @@ function setIngredientsOptions(array $ingredients):string {
     return $htmlContent;
 }
 ?>
-
+<script>
+    tinymce.init({
+    selector: '#floatingTextarea2',
+    license_key: 'gpl|ksqd27htv8embcw3genec4nszsc6iwt5r4gub611klrnyjv5'
+});
+    </script>
 <h1>Entrez votre nouvelle Recette</h1>
 
 <form method="post" action="./gestionRecette.php?from=./NewRecette.php" enctype="multipart/form-data">
@@ -97,7 +103,6 @@ function setIngredientsOptions(array $ingredients):string {
         <h2>Instruction</h2>
         <div class="form-floating">
             <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" name="instructions" style="height: 40vh" required></textarea>
-            <label for="floatingTextarea2">Entrer vos instructions a suivre pour votre Recette</label>
         </div>
     </div>
     <button name="submit" type="submit" class="btn btn-primary">Submit</button>

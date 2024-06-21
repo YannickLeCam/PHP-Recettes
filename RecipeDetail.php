@@ -3,6 +3,8 @@ ob_start();
 require_once './Fonct/BDD_access.php';
 require_once './Fonct/errorController.php';
 require_once './Fonct/badgeCreator.php';
+
+
 if (isset($_GET['id_recipe'])) {
     $id_recipe = (int) $_GET['id_recipe'];
     /**
@@ -51,6 +53,19 @@ if (isset($_GET['id_recipe'])) {
     redirection();
 }
 
+/**
+ * The function calculates the total price of ingredients based on their individual prices and
+ * quantities.
+ * 
+ * @param array ingredients The function `priceTotalGuess` calculates the total price of a list of
+ * ingredients based on their individual prices and quantities. The function takes an array of
+ * ingredients as input, where each ingredient is represented as an associative array with keys 'price'
+ * and 'quantity'.
+ * 
+ * @return float The function `priceTotalGuess` is returning the total price calculated by multiplying
+ * the price of each ingredient by its quantity, summing them up, and rounding the result to 2 decimal
+ * places.
+ */
 function priceTotalGuess(array $ingredients):float{
     $price = 0;
     foreach ($ingredients as $ingredient) {
@@ -59,10 +74,23 @@ function priceTotalGuess(array $ingredients):float{
     return round($price,2);
 }
 
+/**
+ * The function `createIngredientsList` generates an HTML list of ingredients with their names,
+ * quantities, and unit measurements.
+ * 
+ * @param array ingredients The `createIngredientsList` function takes an array of ingredients as input
+ * and generates an HTML list (`<ul>`) with each ingredient displayed as a list item (`<li>`). Each
+ * ingredient in the array should be an associative array with keys `name`, `quantity`, and
+ * `unitMeasure`.
+ * 
+ * @return string The function `createIngredientsList` returns a string containing an HTML unordered
+ * list (`<ul>`) with list items (`<li>`) for each ingredient in the input array. Each list item
+ * includes the ingredient's name, quantity, and unit of measure.
+ */
 function createIngredientsList(array $ingredients):string {
     $htmlContent="<ul>";
     foreach ($ingredients as $ingredient) {
-        $htmlContent.='<li>'.$ingredient['name'].' : '.$ingredient['quantity'].' '. $ingredient["unitMeasure"] .'</li>';
+        $htmlContent.='<li> <i class="fa-solid fa-angle-right"></i>  '.$ingredient['name'].' : '.$ingredient['quantity'].' '. $ingredient["unitMeasure"] .'</li>';
     }
     $htmlContent.="</ul>";
     return $htmlContent;
@@ -79,8 +107,8 @@ $title = $recipeDetail['recipe']['name'];
         }
     ?>
     <div id="infoRecette">
-        <p>Temps de préparation : <?=$recipeDetail['recipe']['timeCook']?> minute<?=($recipeDetail['recipe']['timeCook']>1 ? "s" : "")?></p>
-        <p>Le coût estimé de la recette est : <?=priceTotalGuess($recipeDetail['ingredients'])?> €</p>
+        <p><span>Temps de préparation :</span> <?=$recipeDetail['recipe']['timeCook']?> minute<?=($recipeDetail['recipe']['timeCook']>1 ? "s" : "")?></p>
+        <p><span>Le coût estimé de la recette est :</span> <?=priceTotalGuess($recipeDetail['ingredients'])?> €</p>
     </div>
     <div id="ingredientsList">
         <h2>Ingrédients :</h2>
@@ -88,9 +116,9 @@ $title = $recipeDetail['recipe']['name'];
     </div>
     <div id="instructionsBox">
         <h2>Instructions :</h2>
-        <pre>
-            <?=$recipeDetail['recipe']['instruction']?>  
-        </pre>
+        
+        <?=str_replace('\t','<br>',$recipeDetail['recipe']['instruction'])?>  
+    
     </div>
 </div>
 <div id="buttonDetailBox">

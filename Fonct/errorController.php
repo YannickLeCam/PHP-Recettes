@@ -18,9 +18,14 @@ function setMessage(string $type,string $msg):void{
     return;
 }
 
+
 /**
- * The function `redirection` redirects the user to a specified URL if the "from" parameter is set in
- * the GET request, otherwise it redirects to the index page.
+ * The function `redirection` in PHP is used to redirect the user to a specified URL.
+ * 
+ * @param string dirrection The `redirection` function takes a string parameter named ``
+ * with a default value of `"./index.php"`. This parameter specifies the URL to which the user will be
+ * redirected when the function is called. If no value is provided when calling the function, the
+ * default redirection URL is set
  */
 function redirection(string $dirrection="./index.php"):void{
  

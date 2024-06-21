@@ -4,6 +4,18 @@ require_once 'Fonct/errorController.php';
 require_once 'Fonct/BDD_access.php';
 
 
+/**
+ * The function `uploadImg` checks if an uploaded image meets size and extension requirements, then
+ * moves it to a specified location and returns the image location if successful.
+ * 
+ * @param file The `uploadImg` function you provided is used to upload an image file to a specific
+ * location on the server after performing some validation checks. Here is a breakdown of the function:
+ * 
+ * @return The function `uploadImg` will return the location of the uploaded image if it passes all the
+ * validation checks for size and extension. If the image is too large or has an invalid extension, the
+ * function will set an error message and return `null`. If there is an unknown error during the
+ * process, it will also set an error message and return `null`.
+ */
 function uploadImg($file){
     $tmp_name=$file['tmp_name'];
     $name = $file['name'];

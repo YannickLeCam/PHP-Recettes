@@ -140,15 +140,19 @@ function inBDDIngredients(PDO $mysqlClient , array $ingredients):bool{
     return true;
 }
 
+
 /**
- * The function `getRecipeDetail` retrieves detailed information about a recipe, including recipe
- * details, type of recipe, and ingredients with quantities.
+ * The function `getRecipeDetail` retrieves detailed information about a recipe including its type,
+ * ingredients, and adjacent recipes from a MySQL database using PDO in PHP.
  * 
- * @param PDO mysqlClient The function `getRecipeDetail` takes two parameters:
+ * @param PDO mysqlClient The `` parameter is an instance of the PDO class, which
+ * represents a connection to a database. It is used to execute SQL queries and interact with the
+ * database server.
  * @param int id_recipe The function `getRecipeDetail` takes two parameters:
  * 
- * @return array This function is returning an array containing recipe details, including the recipe
- * itself, its type, and the ingredients with their quantities and prices.
+ * @return array An array containing detailed information about a recipe, including the recipe details,
+ * type of recipe, ingredients with quantity, and information about the previous and next recipes based
+ * on the provided recipe ID.
  */
 function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     $recipeDetail = [];
@@ -158,17 +162,17 @@ function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     $recipeQuery->execute();
     $recipe = $recipeQuery->fetchAll(PDO::FETCH_NAMED);
     $recipeDetail["recipe"]=$recipe[0];
-    /**
-     * Evolution with the next id and the previous to add in $recipeDetail we will can to explore all recipes
-     */
+
     //After we complete the detail with the type of recipe
     $typeMeal = getTypeMealTabById($mysqlClient,$recipe[0]["id_type"]);
     $recipeDetail["recipe"]["type"] = $typeMeal[0];
+
     //Finally we take all ingredients about the recipe with the quentity
     $ingredientsRequest = $mysqlClient->prepare("SELECT name,quantity,unitMeasure,price FROM ingredient INNER JOIN quantify ON quantify.id_ingredient = ingredient.id_ingredent WHERE id_recipe = $id_recipe;");
     $ingredientsRequest->execute();
     $ingredients=$ingredientsRequest->fetchAll(PDO::FETCH_NAMED);
     $recipeDetail["ingredients"]=$ingredients;
+
     //to got the previous recipe
     $prevRecipeQuery = $mysqlClient->prepare("
         SELECT id_recipe,name 
@@ -197,7 +201,6 @@ function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     //check is not empty
     $recipeDetail["next_recipe"] = $nextRecipe ? $nextRecipe : null;
 
-    
     return $recipeDetail;
 }
 

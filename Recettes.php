@@ -3,6 +3,20 @@ ob_start();
 $title = "Recettes";
 require_once './Fonct/BDD_access.php';
 require_once './Fonct/badgeCreator.php';
+
+
+/**
+ * The function `createRecipeCard` generates HTML content for recipe cards using data fetched from a
+ * MySQL database.
+ * 
+ * @param PDO mysqlClient The `mysqlClient` parameter in the `createRecipeCard` function is an instance
+ * of the PDO class, which is used for connecting to and interacting with a MySQL database in PHP. It
+ * allows you to perform database operations such as querying, inserting, updating, and deleting data.
+ * 
+ * @return string The function `createRecipeCard` returns a string containing HTML content for recipe
+ * cards. The HTML content includes details such as recipe name, image, cooking time, meal type badge,
+ * brief instruction, and a button to view more details about the recipe.
+ */
 function createRecipeCard(PDO $mysqlClient):string{
     $htmlContent = "";
     $tabRecipe=getRecipeTab($mysqlClient);
