@@ -30,6 +30,16 @@ if (isset($_GET['id_recipe'])) {
         *    ["price"]
         *    }
         * }
+        *['previous_Recipe']=>
+        *array(2){
+        *    ['id_recipe']
+        *    ['name']
+        *    }
+        *['next_Recipe]=>
+        *array(2){
+        *   ['id_recipe']
+        *   ['name]
+        *   }     
         *}
      */
     $recipeDetail = getRecipeDetail($mysqlClient,$_GET['id_recipe']);
@@ -60,7 +70,6 @@ function createIngredientsList(array $ingredients):string {
 
 $title = $recipeDetail['recipe']['name'];
 ?>
-
 <h1><?=$title.' '.createBadge($recipeDetail['recipe']['type']['typeMeal'])?></h1>
 
 <div id="detailBox">
@@ -85,8 +94,14 @@ $title = $recipeDetail['recipe']['name'];
     </div>
 </div>
 <div id="buttonDetailBox">
-    <button>←</button>
-    <button>→</button>
+    <?php
+        if ($recipeDetail['previous_recipe']!=null) {
+            echo '<a href="./RecipeDetail.php?id_recipe='.$recipeDetail['previous_recipe']['id_recipe'].'"> ←  '.$recipeDetail['previous_recipe']['name'].'</a>';
+        }
+        if ($recipeDetail['next_recipe']!=null) {
+            echo '<a href="./RecipeDetail.php?id_recipe='.$recipeDetail['next_recipe']['id_recipe'].'">'.$recipeDetail['next_recipe']['name'].'  →</a>';
+        }
+    ?>
 </div>
 
 <?php

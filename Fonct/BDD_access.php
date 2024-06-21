@@ -153,10 +153,14 @@ function inBDDIngredients(PDO $mysqlClient , array $ingredients):bool{
 function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     $recipeDetail = [];
     //In first take the recipe details
-    $recipeQuery = $mysqlClient->prepare("SELECT * FROM recipe WHERE id_recipe=$id_recipe");
+    $recipeQuery = $mysqlClient->prepare("SELECT * FROM recipe WHERE id_recipe=:id_recipe");
+    $recipeQuery->bindParam(':id_recipe', $id_recipe, PDO::PARAM_INT);
     $recipeQuery->execute();
     $recipe = $recipeQuery->fetchAll(PDO::FETCH_NAMED);
     $recipeDetail["recipe"]=$recipe[0];
+    /**
+     * Evolution with the next id and the previous to add in $recipeDetail we will can to explore all recipes
+     */
     //After we complete the detail with the type of recipe
     $typeMeal = getTypeMealTabById($mysqlClient,$recipe[0]["id_type"]);
     $recipeDetail["recipe"]["type"] = $typeMeal[0];
@@ -165,9 +169,35 @@ function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     $ingredientsRequest->execute();
     $ingredients=$ingredientsRequest->fetchAll(PDO::FETCH_NAMED);
     $recipeDetail["ingredients"]=$ingredients;
-    /**
-     * Evolution with the next id and the previous to add in $recipeDetail we will can to explore all recipes
-     */
+    //to got the previous recipe
+    $prevRecipeQuery = $mysqlClient->prepare("
+        SELECT id_recipe,name 
+        FROM recipe 
+        WHERE id_recipe < :id_recipe 
+        ORDER BY id_recipe DESC 
+        LIMIT 1
+    ");
+    $prevRecipeQuery->bindParam(':id_recipe', $id_recipe, PDO::PARAM_INT);
+    $prevRecipeQuery->execute();
+    $prevRecipe = $prevRecipeQuery->fetch(PDO::FETCH_NAMED);
+    //check is not empty
+    $recipeDetail["previous_recipe"] = $prevRecipe ? $prevRecipe : null;
+    
+    //to got the next recipe
+    $nextRecipeQuery = $mysqlClient->prepare("
+        SELECT id_recipe,name
+        FROM recipe 
+        WHERE id_recipe > :id_recipe 
+        ORDER BY id_recipe 
+        LIMIT 1
+    ");
+    $nextRecipeQuery->bindParam(':id_recipe', $id_recipe, PDO::PARAM_INT);
+    $nextRecipeQuery->execute();
+    $nextRecipe = $nextRecipeQuery->fetch(PDO::FETCH_NAMED);
+    //check is not empty
+    $recipeDetail["next_recipe"] = $nextRecipe ? $nextRecipe : null;
+
+    
     return $recipeDetail;
 }
 
