@@ -3,6 +3,11 @@
     --hover:#FFB77A;
     --border:#FF897A;
 }
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 /*
 CARD
 */
@@ -78,11 +83,28 @@ form .btn:hover{
     box-shadow: 5px 5px 5px var(--main);
     border-color :var(--border);
 }
-.tox-tinymce{
-    border-color:var(--border) ;
+
+
+.tox-promotion{
+    display: none !important;
 }
-.tox .tox-edit-area__iframe:before{
-    border-color :var(--border);
+.tox-tbtn--enabled{
+    background-color: rgb(238, 238, 238) !important;
+}
+.tox-tbtn--enabled svg{
+    fill: var(--main) !important;
+}
+.tox .tox-edit-area::before {
+    border: 2px solid var(--main) !important;
+    box-shadow: 5px 5px 5px var(--main) !important;
+    border-radius: 4px;
+    content: '';
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transition: opacity .15s;
+    z-index: 1;
 }
 option:hover {
     background-color: var(--main);
@@ -168,14 +190,12 @@ form .btn{
 DETAIL RECETTE
 */
 #detailBox{
-    width: 100vw;
+    box-sizing: border-box;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 2%;
 }
-#detailBox img{
-    min-width: 100%;
-}
+
 #infoRecette{
     display: flex;
     justify-content: space-around;
@@ -201,6 +221,40 @@ DETAIL RECETTE
 #instructionsBox pre{
     max-width: 100%;
 }
+#buttonDetailBox{
+    position: relative;
+    width: 100vw;
+}
+#nextButton{
+    position: absolute;
+    right: 10vw;
+    background-color: var(--main);
+    color: white;
+    padding: 1%;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: larger;
+    transition: 0.5s;
+}
+#prevButton{
+    position: absolute;
+    left: 10vw;
+    background-color: var(--main);
+    color: white;
+    padding: 1%;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: larger;
+    transition: 0.5s;
+}
+#prevButton:hover,#nextButton:hover{
+    background-color: var(--hover);
+    transform: scale(1.05);
+    transition: 0.5s;
+}
+
+
+
 @media only screen and (max-width: 1100px) {
     #cardsBox{
         grid-template-columns: auto auto;

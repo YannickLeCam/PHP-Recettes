@@ -124,10 +124,10 @@ $title = $recipeDetail['recipe']['name'];
 <div id="buttonDetailBox">
     <?php
         if ($recipeDetail['previous_recipe']!=null) {
-            echo '<a href="./RecipeDetail.php?id_recipe='.$recipeDetail['previous_recipe']['id_recipe'].'"> ←  '.$recipeDetail['previous_recipe']['name'].'</a>';
+            echo '<a id="prevButton" href="./RecipeDetail.php?id_recipe='.$recipeDetail['previous_recipe']['id_recipe'].'"> ←  '.$recipeDetail['previous_recipe']['name'].'</a>';
         }
         if ($recipeDetail['next_recipe']!=null) {
-            echo '<a href="./RecipeDetail.php?id_recipe='.$recipeDetail['next_recipe']['id_recipe'].'">'.$recipeDetail['next_recipe']['name'].'  →</a>';
+            echo '<a id="nextButton" href="./RecipeDetail.php?id_recipe='.$recipeDetail['next_recipe']['id_recipe'].'">'.$recipeDetail['next_recipe']['name'].'  →</a>';
         }
     ?>
 </div>
