@@ -33,13 +33,14 @@ function createRecipeCard(PDO $mysqlClient):string{
         $timeCook = $recipe['timeCook'];
         $typeMeal = getTypeMealTabById($mysqlClient, $recipe['id_type'])[0]['typeMeal']; //create badge !
         $badgeTypeMeal = createBadge($typeMeal);
-        $instruction = $first_n = mb_substr($recipe['instruction'], 0, 100, 'UTF-8'); //A voir pour ajouter un Alt dans la BDD
+        $instruction = mb_substr($recipe['instruction'], 0, 100, 'UTF-8'); //A voir pour ajouter un Alt dans la BDD
         $htmlContent.=<<<HTML
         <div class="card">
         <img src="$srcImg" class="card-img-top" alt="..."> 
             <div class="card-body">
                 <h5 class="card-title">$RecipeName  $badgeTypeMeal</h5>
                 <p class="card-text">Temps de préparation : $timeCook</p>
+                <p class="card-text">$instruction</p>   
                 <a href="./RecipeDetail?id_recipe=$id_recipe" class="btn btn-primary">Voir plus</a>
             </div>
         </div>

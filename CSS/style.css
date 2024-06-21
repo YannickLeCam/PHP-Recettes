@@ -3,18 +3,53 @@
     --hover:#FFB77A;
     --border:#FF897A;
 }
-
+/*
+CARD
+*/
 #cardsBox{
 
     display: grid;
     grid-template-columns: auto auto auto auto;
-    gap:5%
+    gap:5%;
+    margin: 2% 5%;
 }
 
 .card{
-    max-height: 30vh;
+    height: 40vh;
+    overflow: hidden;
 }
+.card:hover{
+    border:1px var(--main) solid;
+}
+
+.card-img-top{
+    width: 100%;
+    height: 15vh;
+    max-height: 15vh;
+    object-fit: cover;
+}
+.card-body { 
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+}
+.card .btn {
+    position: absolute;
+    bottom: 4%;
+    background-color: var(--main);
+    border-color: var(--main);
+    transition: 0.5s;
+}
+.card .btn:hover {
+    transform: scale(1.05);
+    background-color: var(--hover);
+    transition: 0.5s;
+}
+
 h1{
+    margin-top: 2%;
     text-align: center;
     color: var(--main);
 }
@@ -123,3 +158,16 @@ form .btn{
 .floatingLabel::after {
     color: var(--main);
 }
+
+@media only screen and (max-width: 1200px) {
+    #cardsBox{
+        grid-template-columns: auto auto;
+    }
+  }
+
+@media only screen and (max-width: 600px) {
+    #cardsBox{
+        grid-template-columns: auto;
+        gap: 1%;
+    }
+  }
