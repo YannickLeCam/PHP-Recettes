@@ -156,16 +156,18 @@ function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     $recipeQuery = $mysqlClient->prepare("SELECT * FROM recipe WHERE id_recipe=$id_recipe");
     $recipeQuery->execute();
     $recipe = $recipeQuery->fetchAll(PDO::FETCH_NAMED);
-    $recipeDetail["recipe"]=$recipe;
+    $recipeDetail["recipe"]=$recipe[0];
     //After we complete the detail with the type of recipe
-    $typeMeal = getTypeMealTabById($mysqlClient,$recipe["id_type"]);
-    $recipeDetail["recipe"]["type"] = $typeMeal;
+    $typeMeal = getTypeMealTabById($mysqlClient,$recipe[0]["id_type"]);
+    $recipeDetail["recipe"]["type"] = $typeMeal[0];
     //Finally we take all ingredients about the recipe with the quentity
     $ingredientsRequest = $mysqlClient->prepare("SELECT name,quantity,unitMeasure,price FROM ingredient INNER JOIN quantify ON quantify.id_ingredient = ingredient.id_ingredent WHERE id_recipe = $id_recipe;");
     $ingredientsRequest->execute();
     $ingredients=$ingredientsRequest->fetchAll(PDO::FETCH_NAMED);
     $recipeDetail["ingredients"]=$ingredients;
-
+    /**
+     * Evolution with the next id and the previous to add in $recipeDetail we will can to explore all recipes
+     */
     return $recipeDetail;
 }
 
