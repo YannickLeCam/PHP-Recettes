@@ -101,11 +101,13 @@ $title = $recipeDetail['recipe']['name'];
 <h1><?=$title.' '.createBadge($recipeDetail['recipe']['type']['typeMeal'])?></h1>
 
 <div id="detailBox">
+    <div id="imgRecetteDetail">
     <?php
         if ($recipeDetail['recipe']['image']!=null) {
             echo '<img src="'.$recipeDetail['recipe']['image'].'" alt="image représentant la recette">';
         }
     ?>
+    </div>
     <div id="infoRecette">
         <p><span>Temps de préparation :</span> <?=$recipeDetail['recipe']['timeCook']?> minute<?=($recipeDetail['recipe']['timeCook']>1 ? "s" : "")?></p>
         <p><span>Le coût estimé de la recette est :</span> <?=priceTotalGuess($recipeDetail['ingredients'])?> €</p>
@@ -117,11 +119,13 @@ $title = $recipeDetail['recipe']['name'];
     <div id="instructionsBox">
         <h2>Instructions :</h2>
         
-        <?=str_replace('\t','<br>',$recipeDetail['recipe']['instruction'])?>  
+        <?="<p>".$recipeDetail['recipe']['instruction']."</p>"?>  
     
     </div>
 </div>
 <div id="buttonDetailBox">
+    <a href="" id="editButton"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></a>
+    <a href="" id="deleteButton"><i class="fa-solid fa-trash" style="color:#ffffff;"></i></a>
     <?php
         if ($recipeDetail['previous_recipe']!=null) {
             echo '<a id="prevButton" href="./RecipeDetail.php?id_recipe='.$recipeDetail['previous_recipe']['id_recipe'].'"> ←  '.$recipeDetail['previous_recipe']['name'].'</a>';

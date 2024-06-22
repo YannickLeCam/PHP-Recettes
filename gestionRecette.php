@@ -43,6 +43,84 @@ function uploadImg($file){
     return null; //Si l'image a eu un pb un endroit car il n'a pas passé tout les tests il se retrouve ici (Juste sécurité).
 }
 
+function verifyFormData($mysqlClient) {
+    $data = [];
+    if (isset($_POST['nameRecette'])) {
+        $data['nameRecette'] = filter_input(INPUT_POST, "nameRecette", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if ($data['nameRecette'] == "") {
+            return ["error" => "Nom de la Recette manquant . . ."];
+        }
+    } else {
+        return ["error" => "Nom de la Recette manquant . . ."];
+    }
+
+    if (isset($_POST['timeCook'])) {
+        $data['timeCook'] = filter_input(INPUT_POST, "timeCook", FILTER_VALIDATE_INT);
+        if ($data['timeCook'] < 1 || $data['timeCook'] > 3600) {
+            return ["error" => "Le temps de préparation semble être invalide"];
+        }
+    } else {
+        return ["error" => "Le temps de préparation manquant . . ."];
+    }
+
+    if (isset($_POST['typeMeal']) && $_POST['typeMeal'] != 0) {
+        $data['typeMeal'] = filter_input(INPUT_POST, "typeMeal", FILTER_VALIDATE_INT);
+        if (!inBDDTypeMeal($mysqlClient, $data['typeMeal'])) {
+            return ["error" => "La catégorie de repas semble être invalide . . ."];
+        }
+    } else {
+        return ["error" => "La catégorie de repas est manquant . . ."];
+    }
+
+    if (isset($_POST['instructions'])) {
+        $data['instructions'] = filter_input(INPUT_POST, "instructions", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if ($data['instructions'] == "") {
+            return ["error" => "Il semble manquer des instructions . . ."];
+        }
+    } else {
+        return ["error" => "Il semble manquer des instructions . . ."];
+    }
+
+    if (isset($_FILES['file'])) {
+        $data['image'] = uploadImg($_FILES['file']);
+    } else {
+        $data['image'] = null;
+    }
+
+    if (isset($_POST['ingredient'])) {
+        if (isset($_POST['ingredient']['id']) && isset($_POST['ingredient']['qtt'])) {
+            if (count($_POST['ingredient']['id']) != count($_POST['ingredient']['qtt'])) {
+                return ["error" => 'Une quantité ou un ingrédient semble avoir été oublié . . .'];
+            } else {
+                $ingredients = [];
+                $args = [
+                    "id" => array(
+                        'filter' => FILTER_VALIDATE_INT,
+                        'flags' => FILTER_FORCE_ARRAY
+                    ),
+                    "qtt" => array(
+                        'filter' => FILTER_VALIDATE_FLOAT,
+                        'flags' => FILTER_FORCE_ARRAY
+                    )
+                ];
+                $ingredientsSaint = filter_var_array($_POST['ingredient'], $args);
+                if (checkDoubleIngredient($ingredientsSaint)) {
+                    return ["error" => 'Un ingrédient été retrouvé en double dans la recette . . .'];
+                }
+                foreach ($ingredientsSaint['id'] as $key => $value) {
+                    $ingredients[$key]['id'] = (int)$ingredientsSaint['id'][$key];
+                    $ingredients[$key]['qtt'] = (int)$ingredientsSaint['qtt'][$key];
+                }
+                if (!inBDDIngredients($mysqlClient, $ingredients)) {
+                    return ["error" => "Il semble avoir une erreur sur l'entrée de vos ingrédients . . ."];
+                }
+                $data['ingredients'] = $ingredients;
+            }
+        }
+    }
+    return $data;
+}
+
 
 /**
  * The function `checkDoubleIngredient` checks if there are any duplicate ingredients in an array.
@@ -62,154 +140,18 @@ function checkDoubleIngredient(array $tabIdIngredient):bool{
     }
     return false;
 }
+
+
 if (isset($_POST['submit'])) {
-    /**
-     * Verification de la présence des attributs OBLIGATOIRE
-     */
-    if (isset($_POST['nameRecette'])) {
-       $nameRecette = filter_input(INPUT_POST,"nameRecette",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
-       if ($nameRecette=="") {
-            setMessage("error","Nom de la Recette manquant . . .");
-            redirection("./NewRecette.php");
-       }
-    }else {
-        setMessage("error","Nom de la Recette manquant . . .");
+    $data = verifyFormData($mysqlClient);
+    if (isset($data['error'])) {
+        setMessage("error", $data['error']);
         redirection("./NewRecette.php");
+    } else {
+        insertData($mysqlClient, $data);
     }
-    if (isset($_POST['timeCook'])) {
-        $timeCook = filter_input(INPUT_POST,"timeCook",FILTER_VALIDATE_INT);
-        if ($timeCook<1 && $timeCook>3600) {
-            setMessage("error","Le temps de préparation semble etre invalide");
-        }
-    }else {
-        setMessage("error","Le temps de préparation manquant . . .");
-        redirection("./NewRecette.php");
-    }
-    if (isset($_POST['typeMeal'] )|| $_POST['typeMeal']==0) {
-        $typeMeal = filter_input(INPUT_POST,"typeMeal",FILTER_VALIDATE_INT);
-        if (!inBDDTypeMeal($mysqlClient , $typeMeal)) {
-            setMessage("error","La catégorie de repas semble être invalide . . .");
-            redirection("./NewRecette.php");
-        }
-
-    }else {
-        setMessage("error","La catégorie de repas est manquant . . .");
-        redirection("./NewRecette.php");
-    }
-    if (isset($_POST['instructions'])) {
-        $instructions = filter_input(INPUT_POST,"instructions",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        if ($instructions == "") {
-            setMessage("error","Il semble manquer des instructions . . .");
-            redirection("./NewRecette.php");
-        }
-    }else {
-        setMessage("error","Il semble manquer des instructions . . .");
-        redirection("./NewRecette.php");
-    }
-
-    /**
-     * file checking if invalid/no image then $image ==null
-     * don't forgot to add recipe image attribute
-     */
-    if (isset($_FILES['file'])) {
-        $image=uploadImg($_FILES['file']);
-    }else {
-        $image=null;
-    }
-
-    /**
-     * Ingredients checking
-     */
-    if (isset($_POST['ingredient'])) {
-        if (isset($_POST['ingredient']['id']) && isset($_POST['ingredient']['qtt'])) {
-            
-            if (count($_POST['ingredient']['id'])!=count($_POST['ingredient']['qtt'])) {
-                setMessage('error','Une quantité ou un ingrédient semble avoir été oublié . . .');
-                redirection("./NewRecette.php");
-            }else {
-                $ingredients=[];
-                $args = [
-                    "id" => array(
-                        'filter' => FILTER_VALIDATE_INT,
-                        'flags' => FILTER_FORCE_ARRAY
-                    ),
-                    "qtt" => array(
-                        'filter' => FILTER_VALIDATE_FLOAT,
-                        'flags' => FILTER_FORCE_ARRAY
-                    )
-                ];
-                $ingredientsSaint=filter_var_array($_POST['ingredient'],$args);
-                if (checkDoubleIngredient($ingredientsSaint)) {
-                    setMessage('error','Un ingrédient été retrouvé en double dans la recette . . .');
-                    redirection("./NewRecette.php");
-                }
-                foreach ($ingredientsSaint['id'] as $key => $value) {
-                    $ingredients[$key]['id']=(int) $ingredientsSaint['id'][$key]; 
-                    $ingredients[$key]['qtt']=(int) $ingredientsSaint['qtt'][$key];
-                }
-                if(!inBDDIngredients($mysqlClient,$ingredients)){
-                    setMessage("error","Il semble avoir une erreur sur l'entrée de vos ingrédients . . .");
-                    redirection("./NewRecette.php"); //Cancel because it's a suspect situation
-                }
-            }
-        }
-    }
-    /**
-     * data is good !
-     * So happy end !
-     */
-    try {
-        $queryInsertRecipe = $mysqlClient->prepare("INSERT INTO  recipe (name, instruction,timeCook,id_type,image ) VALUES (:name, :instruction, :timeCook ,:id_type,:image)");
-        $queryInsertRecipe->bindParam(":name", $nameRecette);
-        $queryInsertRecipe->bindParam(":instruction", $instructions);
-        $queryInsertRecipe->bindParam(":timeCook", $timeCook);
-        $queryInsertRecipe->bindParam(":id_type",$typeMeal);
-        $queryInsertRecipe->bindParam(":image",$image);
-
-        if ($queryInsertRecipe->execute()){
-            // continue to add with the link Ingredients/Recipe/qtt
-            $idRecipe = $mysqlClient->lastInsertId();
-            if (isset($ingredients)) {
-                foreach ($ingredients as $ingredient) {
-                    $queryInsertIngredient = $mysqlClient->prepare("INSERT INTO quantify (quantity,id_ingredient,id_recipe) VALUES (:quantity,:id_ingredient,:id_recipe)");
-                    $queryInsertIngredient->bindParam(":quantity",$ingredient["qtt"]);
-                    $queryInsertIngredient->bindParam(":id_ingredient",$ingredient['id']);
-                    $queryInsertIngredient->bindParam(":id_recipe",$idRecipe);
-                    if (!$queryInsertIngredient->execute()) {
-                        setMessage("error","Probleme lors de l'insertion dans la base de donnée (QUANTIFY) . . ."); //Les parenthèqe vont disparaitre dans plus tard ! 
-                        redirection("./NewRecette.php");
-                    }
-                }
-                setMessage("success","La recette a bien été enregistré !");
-                redirection("./NewRecette.php");
-            }else {
-                setMessage("success","La recette a bien été enregistré ! (Sans ingrédients)");
-                redirection("./NewRecette.php");
-            }
-
-
-        }else {
-            setMessage("error","Probleme lors de l'insertion dans la base de donnée (RECIPE) . . .");
-            redirection("./NewRecette.php");
-        }
-    } catch (Exception $e) {
-        setMessage("error","Probleme lors de l'insertion dans la base de donnée (RECIPE) . . . \n $e");
-        redirection("./NewRecette.php");
-    }
-
-    echo "<pre>";
-    
-    var_dump($_SESSION);
-    var_dump($ingredients);
-    var_dump($nameRecette);
-    var_dump($instructions);
-    var_dump($timeCook);
-    var_dump($typeMeal);
-    echo "</pre>";
-    die();
-    redirection("./NewRecette.php");
 }
+
 
 redirection();
 

@@ -1,4 +1,5 @@
 <?php
+require_once './Fonct/errorController.php';
 try {
     $mysqlClient = new PDO(
         'mysql:host=localhost;dbname=recipe_demo;charset=utf8',
@@ -202,6 +203,78 @@ function getRecipeDetail(PDO $mysqlClient, int $id_recipe):array{
     $recipeDetail["next_recipe"] = $nextRecipe ? $nextRecipe : null;
 
     return $recipeDetail;
+}
+
+/**
+ * The function `insertData` inserts recipe data into a MySQL database, including recipe details,
+ * ingredients, and handling potential errors.
+ * 
+ * @param mysqlClient The `` parameter in the `insertData` function is likely an instance
+ * of a PDO object representing a connection to a MySQL database. This object is used to prepare and
+ * execute SQL queries to interact with the database.
+ * @param data The `insertData` function you provided seems to be inserting recipe data into a database
+ * along with its associated ingredients. The function takes two parameters: ``, which is
+ * presumably a PDO object for database connection, and ``, which contains the recipe information
+ * to be inserted.
+ */
+function insertData($mysqlClient, $data) {
+    try {
+        $queryInsertRecipe = $mysqlClient->prepare("INSERT INTO recipe (name, instruction, timeCook, id_type, image) VALUES (:name, :instruction, :timeCook, :id_type, :image)");
+        $queryInsertRecipe->bindParam(":name", $data['nameRecette']);
+        $queryInsertRecipe->bindParam(":instruction", $data['instructions']);
+        $queryInsertRecipe->bindParam(":timeCook", $data['timeCook']);
+        $queryInsertRecipe->bindParam(":id_type", $data['typeMeal']);
+        $queryInsertRecipe->bindParam(":image", $data['image']);
+
+        if ($queryInsertRecipe->execute()) {
+            $idRecipe = $mysqlClient->lastInsertId();
+            if (isset($data['ingredients'])) {
+                foreach ($data['ingredients'] as $ingredient) {
+                    $queryInsertIngredient = $mysqlClient->prepare("INSERT INTO quantify (quantity, id_ingredient, id_recipe) VALUES (:quantity, :id_ingredient, :id_recipe)");
+                    $queryInsertIngredient->bindParam(":quantity", $ingredient["qtt"]);
+                    $queryInsertIngredient->bindParam(":id_ingredient", $ingredient['id']);
+                    $queryInsertIngredient->bindParam(":id_recipe", $idRecipe);
+                    if (!$queryInsertIngredient->execute()) {
+                        setMessage("error", "Probleme lors de l'insertion dans la base de donnée (QUANTIFY) . . .");
+                        redirection("./NewRecette.php");
+                    }
+                }
+                setMessage("success", "La recette a bien été enregistrée !");
+                redirection("./NewRecette.php");
+            } else {
+                setMessage("success", "La recette a bien été enregistrée ! (Sans ingrédients)");
+                redirection("./NewRecette.php");
+            }
+        } else {
+            setMessage("error", "Probleme lors de l'insertion dans la base de donnée (RECIPE) . . .");
+            redirection("./NewRecette.php");
+        }
+    } catch (Exception $e) {
+        setMessage("error", "Probleme lors de l'insertion dans la base de donnée (RECIPE) . . . \n $e");
+        redirection("./NewRecette.php");
+    }
+}
+
+/**
+ * This PHP function deletes a recipe from a database using a prepared statement with a specified
+ * recipe ID.
+ * 
+ * @param PDO mysqlClient The `` parameter is an instance of the PDO class, which
+ * represents a connection to a database. It is used to interact with the database and execute SQL
+ * queries. In this case, it is used to prepare and execute a DELETE query to delete a recipe from the
+ * database.
+ * @param int id_recipe The `id_recipe` parameter is an integer that represents the unique identifier
+ * of the recipe that you want to delete from the database. This parameter is used in the SQL query to
+ * specify which recipe should be deleted based on its ID.
+ * 
+ * @return void The function `deleteRecipe` is returning `void`, which means it does not return any
+ * value.
+ */
+function deleteRecipe(PDO $mysqlClient,int $id_recipe):void{
+    $deleteRecipeRequest = $mysqlClient-> prepare("DELETE FROM recipe WHERE id_recipe = :id_recipe");
+    $deleteRecipeRequest->bindParam(':id_recipe', $id_recipe, PDO::PARAM_INT);
+    $deleteRecipeRequest->execute();
+    return;
 }
 
 ?>
