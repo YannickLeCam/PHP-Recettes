@@ -104,7 +104,7 @@ function verifyFormData($mysqlClient) {
                     )
                 ];
                 $ingredientsSaint = filter_var_array($_POST['ingredient'], $args);
-                if (checkDoubleIngredient($ingredientsSaint)) {
+                if (checkDoubleIngredient($ingredientsSaint['id'])) {
                     return ["error" => 'Un ingrédient été retrouvé en double dans la recette . . .'];
                 }
                 foreach ($ingredientsSaint['id'] as $key => $value) {
@@ -149,6 +149,7 @@ if (isset($_POST['submit'])) {
         redirection("./NewRecette.php");
     } else {
         insertData($mysqlClient, $data);
+        redirection("./NewRecette.php");
     }
 }
 

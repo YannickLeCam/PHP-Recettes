@@ -46,18 +46,12 @@ function setIngredientsOptions(array $ingredients):string {
     return $htmlContent;
 }
 ?>
-<script>
-    tinymce.init({
-    selector: '#floatingTextarea2',
-    license_key: 'gpl|ksqd27htv8embcw3genec4nszsc6iwt5r4gub611klrnyjv5'
-});
-    </script>
 <h1>Entrez votre nouvelle Recette</h1>
 
 <form method="post" action="./gestionRecette.php?from=./NewRecette.php" enctype="multipart/form-data">
     <h2>Details recette</h2>
     <div id="form">
-        <div class="d-flex">
+        <div class="d-flex" id="infoBase">
             <div class="form-floating mb-3 p-2 flex-fill">
                 <input type="text" class="form-control" id="floatingInputDisabled" name="nameRecette" placeholder="Nom de la recette" required>
                 <label for="floatingInputDisabled">Nom de la recette</label>
@@ -100,14 +94,27 @@ function setIngredientsOptions(array $ingredients):string {
             <i class="fa-solid fa-plus"></i>
         </div>
         
-        <h2>Instruction</h2>
-        <div class="form-floating">
-            <textarea class="form-control" placeholder="Entrer vos instructions a suivre pour votre Recette" id="floatingTextarea2" name="instructions" style="height: 40vh" required></textarea>
+        <h2>Instructions</h2>
+        <div id="instructionsForm">
+            <div id="floatingTextarea2">
+            </div>
         </div>
     </div>
     <button name="submit" type="submit" class="btn btn-primary">Submit</button>
 </form>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        var quill = new Quill('#floatingTextarea2', {
+            placeholder: 'Entrer les instructions de la recettes',
+            theme: 'snow'
+        });
 
+        function handleSubmit() {
+            var content = quill.root.innerHTML;
+            document.querySelector('[name="instructions"]').value = content;
+            return true; // Proceed with form submission
+        }
+    </script>
 <script src="JS/scriptNewRecette.js"></script>
 <?php
 $content = ob_get_clean();

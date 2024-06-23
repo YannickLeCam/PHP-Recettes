@@ -65,16 +65,26 @@ h2{
 select{
     height: 3.6rem;
 }
+form {
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
 
 form .btn{
     background-color: var(--main);
     border-color: var(--border);
+    align-self: center;
+    width: 30vw;
+    margin-bottom: 5vh;
+    transition: 0.5s;
 }
 form .btn:hover{
     background-color: var(--hover);
     border-color: var(--border);
+    transform: scale(1.05);
+    transition: 0.5s;
 }
-
 .form-select:focus{
     box-shadow: 5px 5px 5px var(--main);
     border-color :var(--border);
@@ -84,27 +94,28 @@ form .btn:hover{
     border-color :var(--border);
 }
 
-
-.tox-promotion{
-    display: none !important;
+#instructionsForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.tox-tbtn--enabled{
-    background-color: rgb(238, 238, 238) !important;
-}
-.tox-tbtn--enabled svg{
-    fill: var(--main) !important;
-}
-.tox .tox-edit-area::before {
+.ql-container {
     border: 2px solid var(--main) !important;
     box-shadow: 5px 5px 5px var(--main) !important;
-    border-radius: 4px;
-    content: '';
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    position: absolute;
-    transition: opacity .15s;
-    z-index: 1;
+    border-radius: 12px;
+    height: 40vh;
+    width: 90vw;
+}
+.ql-toolbar{
+    border: 2px solid var(--main) !important;
+    border-radius: 12px;
+    width: 90vw;
+}
+.ql-snow.ql-toolbar button:hover{
+    color: var(--main) !important;
+}
+snow.ql-toolbar button.ql-active{
+    color: var(--main) !important;
 }
 option:hover {
     background-color: var(--main);
@@ -157,7 +168,12 @@ BOUTON DELETE LIGNE INGREDIENT
 .buttonDeleteLine i{
     background-color: #ff6961;
     color: white;
-    padding: 60%;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 100%;
     font-size: x-large;
     transition: 0.5s;
@@ -178,10 +194,6 @@ FORM
     margin-bottom: 5%;
 }
 
-form .btn{
-    margin: 0 35vw 5vh 35vw;
-    width: 30vw;
-}
 .floatingLabel::after {
     color: var(--main);
 }
@@ -294,11 +306,33 @@ DETAIL RECETTE
     #cardsBox{
         grid-template-columns: auto auto;
     }
+
+    #infoBase{
+        flex-direction: column;
+    }
+    #ingredientBox{
+        max-width: 100%;
+    }
+    #buttonAddNewLineIngredient{
+        width: 100%;
+    }
+    #buttonAddNewLineIngredient i{
+        width: 30%;
+        height: 4vh;
+    }
+
   }
 
 @media only screen and (max-width: 600px) {
     #cardsBox{
         grid-template-columns: auto;
         gap: 1%;
+    }
+    #buttonAddNewLineIngredient{
+        width: 100%;
+    }
+    #buttonAddNewLineIngredient i{
+        width: 80%;
+        height: 4vh;
     }
   }
