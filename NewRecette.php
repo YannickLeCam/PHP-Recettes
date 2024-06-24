@@ -12,7 +12,6 @@ $ingredients = getIngredients($mysqlClient);
 
 ?>
 <h1>Entrez votre nouvelle Recette</h1>
-
 <form id="recetteForm" method="post" action="./gestionRecette.php" enctype="multipart/form-data">
     <h2>Details recette</h2>
     <div id="form">
@@ -37,6 +36,7 @@ $ingredients = getIngredients($mysqlClient);
             <label for="formFileLg" class="form-label">Image de la recette :</label>
             <input class="form-control form-control-lg" id="formFileLg" name="file" type="file">
         <h2>Ingrédients</h2>
+        <button id="openIngredientForm">Ajouter un ingrédient</button>
         <div id="formIngredient">
             <div class="d-flex" id="ingredientBox">
                 <div class="p-2 flex-fill">

@@ -26,3 +26,10 @@ boutonAddNewLine.addEventListener("click",function () {
     updateEventListener();
 })
 
+const buttonIngredientForm = document.getElementById("openIngredientForm");
+const ingredientForm = document.getElementById("ingredientForm");
+
+buttonIngredientForm.addEventListener("click",()=>{
+
+})
+

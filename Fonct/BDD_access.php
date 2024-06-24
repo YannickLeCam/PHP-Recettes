@@ -333,5 +333,20 @@ function editRecipe(PDO $mysqlClient, int $id_recipe, array $recipeEdited): bool
     }
 }
 
+function insertNewIngredient(PDO $mysqlClient , array $newIngredient):bool{
+    try {
+        $insertRequest = $mysqlClient->prepare('INSERT INTO INGREDIENT (name, price, unitMeasure) VALUES (:name , :price , :unitMeasure)');
+        $insertRequest->bindParam(':name',$newIngredient['name']);
+        $insertRequest->bindParam(':price',$newIngredient['price']);
+        $insertRequest->bindParam('unitMeasure',$newIngredient['unitMeasure']);
+        $insertRequest->execute();
+        setMessage("success","L'ingrédient a été ajouté !");
+        return true;
+    } catch (Exception $e) {
+        setMessage('error',$e);
+        return false;
+    }
+}
+
 
 ?>

@@ -43,7 +43,7 @@ function uploadImg($file){
     return null; //Si l'image a eu un pb un endroit car il n'a pas passé tout les tests il se retrouve ici (Juste sécurité).
 }
 
-function verifyFormData($mysqlClient) {
+function verifyFormDataRecipe($mysqlClient) {
     $data = [];
     if (isset($_POST['nameRecette'])) {
         $data['nameRecette'] = filter_input(INPUT_POST, "nameRecette", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -108,8 +108,8 @@ function verifyFormData($mysqlClient) {
                     return ["error" => 'Un ingrédient été retrouvé en double dans la recette . . .'];
                 }
                 foreach ($ingredientsSaint['id'] as $key => $value) {
-                    $ingredients[$key]['id'] = (int)$ingredientsSaint['id'][$key];
-                    $ingredients[$key]['qtt'] = (int)$ingredientsSaint['qtt'][$key];
+                    $ingredients[$key]['id'] = $ingredientsSaint['id'][$key];
+                    $ingredients[$key]['qtt'] = $ingredientsSaint['qtt'][$key];
                 }
                 if (!inBDDIngredients($mysqlClient, $ingredients)) {
                     return ["error" => "Il semble avoir une erreur sur l'entrée de vos ingrédients . . ."];
@@ -120,7 +120,34 @@ function verifyFormData($mysqlClient) {
     }
     return $data;
 }
-
+function verifyFormDataIngredient(PDO $mysqlClient):array{
+    $data=[];
+    if (isset($_POST['name'])) {
+        $data['name'] = filter_input(INPUT_POST, "name", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if ($data['name'] == "") {
+            return ["error" => "Nom de l'ingrédient manquant . . ."];
+        }
+    } else {
+        return ["error" => "Nom de l'ingrédient manquant . . ."];
+    }
+    if (isset($_POST['price'])) {
+        $data['price'] = filter_input(INPUT_POST, "price", FILTER_VALIDATE_FLOAT);
+        if ($data['price'] == "") {
+            return ["error" => "Prix de l'ingrédient manquant . . ."];
+        }
+    } else {
+        return ["error" => "Prix de l'ingrédient manquant . . ."];
+    }
+    if (isset($_POST['unitMeasure'])) {
+        $data['unitMeasure'] = filter_input(INPUT_POST, "unitMeasure", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if ($data['unitMeasure'] == "") {
+            return ["error" => "L'unité de mesure semble etre manquant . . ."];
+        }
+    } else {
+        return ["error" => "L'unité de mesure semble etre manquant . . ."];
+    }
+    return $data;
+}
 
 /**
  * The function `checkDoubleIngredient` checks if there are any duplicate ingredients in an array.
@@ -152,7 +179,7 @@ if (isset($_GET['action'])) {
     }
     if ($_GET['action']=="edit") {
         $id_recipe = filter_input(INPUT_GET, "id_recipe", FILTER_VALIDATE_INT);
-        $data = verifyFormData($mysqlClient);
+        $data = verifyFormDataRecipe($mysqlClient);
         if (isset($data['error'])) {
             setMessage("error", $data['error']);
             redirection("./editRecette.php?id_recipe=$id_recipe");
@@ -165,10 +192,22 @@ if (isset($_GET['action'])) {
 
     }
 }
+if (isset($_POST['submitBtnIngredient'])) {
+    $data = verifyFormDataIngredient($mysqlClient);
+    if ($data['error']) {
+        setMessage('error',$data['error']);
+        redirection("./NewRecette.php");
+        die;
+    }else {
+        insertNewIngredient($mysqlClient,$data);
+        redirection('./NewRecette.php');
+        die;
+    }
+}
 
 if (isset($_POST['submitBtn'])) {
 
-    $data = verifyFormData($mysqlClient);
+    $data = verifyFormDataRecipe($mysqlClient);
     
     if (isset($data['error'])) {
         setMessage("error", $data['error']);
