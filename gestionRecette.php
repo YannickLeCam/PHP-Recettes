@@ -143,6 +143,29 @@ function checkDoubleIngredient(array $tabIdIngredient):bool{
 // var_dump($_POST);
 // die();
 
+if (isset($_GET['action'])) {
+    if ($_GET['action']=="delete") {
+        $id_recipe = filter_input(INPUT_GET, "id_recipe", FILTER_VALIDATE_INT);
+        deleteRecipe($mysqlClient,$id_recipe);
+        redirection("./Recettes.php");
+        die;
+    }
+    if ($_GET['action']=="edit") {
+        $id_recipe = filter_input(INPUT_GET, "id_recipe", FILTER_VALIDATE_INT);
+        $data = verifyFormData($mysqlClient);
+        if (isset($data['error'])) {
+            setMessage("error", $data['error']);
+            redirection("./editRecette.php?id_recipe=$id_recipe");
+            die;
+        }else {
+            editRecipe($mysqlClient,$id_recipe,$data);
+            redirection("./RecipeDetail.php?id_recipe=".$id_recipe);
+            die;
+        }
+
+    }
+}
+
 if (isset($_POST['submitBtn'])) {
 
     $data = verifyFormData($mysqlClient);
@@ -158,14 +181,8 @@ if (isset($_POST['submitBtn'])) {
     }
 }
 
-if (isset($_GET['action'])) {
-    if ($_GET['action']=="delete") {
-        $id_recipe = filter_input(INPUT_GET, "id_recipe", FILTER_VALIDATE_INT);
-        deleteRecipe($mysqlClient,$id_recipe);
-        redirection("./Recettes.php");
-        die;
-    }
-}
+
+
 
 redirection();
 

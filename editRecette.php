@@ -52,10 +52,7 @@ if (isset($_GET['id_recipe'])) {
 }else {
     redirection();
 }
-function setIngredientBox(PDO $mysqlClient, int $id_recipe):string{
-    $htmlContent="";
-    return $htmlContent;
-}
+
 $typeMeal=getTypeMealTab($mysqlClient);
 $ingredients = getIngredients($mysqlClient);
 $instructions =  html_entity_decode($recipeDetail['recipe']['instruction']);
@@ -108,18 +105,16 @@ $title = $recipeDetail['recipe']['name'];
         });
         const recipeForm = document.getElementById('recetteForm');
         function handleSubmit(event) {
-        //event.preventDefault(); // Prevent the default form submission
 
-        var content = htmlspecialchars(quill.root.innerHTML);
-        console.log("Quill content:", content); // Debugging log
+        var content = quill.root.innerHTML;
         document.querySelector('[name="instructions"]').value = content;
-        console.log("Hidden input value:", document.querySelector('[name="instructions"]').value); // Debugging log
-        // Manually submit the form
         recipeForm.submit();
     }
     
     recipeForm.addEventListener('submit', handleSubmit);
     </script>
+    <script src="JS/scriptNewRecette.js"></script>
+
 
 
 <?php

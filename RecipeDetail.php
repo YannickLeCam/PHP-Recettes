@@ -1,4 +1,5 @@
 <?php
+session_start();
 ob_start();
 require_once './Fonct/BDD_access.php';
 require_once './Fonct/errorController.php';

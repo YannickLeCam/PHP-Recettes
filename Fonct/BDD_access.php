@@ -277,4 +277,61 @@ function deleteRecipe(PDO $mysqlClient,int $id_recipe):void{
     return;
 }
 
+
+function editRecipe(PDO $mysqlClient, int $id_recipe, array $recipeEdited): bool {
+    try {
+        /**
+         * General part
+         */
+        $updateRequest = $mysqlClient->prepare('UPDATE recipe
+            SET name = :name, instruction = :instruction, timeCook = :timeCook, id_type = :id_type, image = :img
+            WHERE id_recipe = :id_recipe');
+        $updateRequest->bindParam(':name', $recipeEdited['nameRecette']);
+        $updateRequest->bindParam(':instruction', $recipeEdited['instructions']);
+        $updateRequest->bindParam(':timeCook', $recipeEdited['timeCook']);
+        $updateRequest->bindParam(':id_type', $recipeEdited['typeMeal']);
+        $updateRequest->bindParam(':img', $recipeEdited['image']);
+        $updateRequest->bindParam(':id_recipe', $id_recipe);
+
+        if ($updateRequest->execute()) {
+            /**
+             * Part Ingredient
+             */
+            $deleteRequest = $mysqlClient->prepare('DELETE FROM quantify WHERE id_recipe = :id_recipe');
+            $deleteRequest->bindParam(':id_recipe', $id_recipe);
+
+            if (!$deleteRequest->execute()) {
+                setMessage('error', "Erreur dans la suppression des ingrédients dans la base de données");
+                return false;
+            }
+
+            if (isset($recipeEdited['ingredients'])) {
+                foreach ($recipeEdited['ingredients'] as $ingredient) {
+                    $queryInsertIngredient = $mysqlClient->prepare("INSERT INTO quantify (quantity, id_ingredient, id_recipe) VALUES (:quantity, :id_ingredient, :id_recipe)");
+                    $queryInsertIngredient->bindParam(":quantity", $ingredient["qtt"]);
+                    $queryInsertIngredient->bindParam(":id_ingredient", $ingredient['id']);
+                    $queryInsertIngredient->bindParam(":id_recipe", $id_recipe);
+
+                    if (!$queryInsertIngredient->execute()) {
+                        setMessage("error", "Problème lors de l'insertion dans la base de données (QUANTIFY)");
+                        return false;
+                    }
+                }
+                setMessage("success", "La recette a bien été modifiée !");
+                return true;
+            } else {
+                setMessage("success", "La recette a bien été modifiée! (Sans ingrédients)");
+                return true;
+            }
+        } else {
+            setMessage('error', "Erreur dans la mise à jour de la recette");
+            return false;
+        }
+    } catch (PDOException $e) {
+        setMessage('error', "Erreur de base de données : " . $e->getMessage());
+        return false;
+    }
+}
+
+
 ?>
