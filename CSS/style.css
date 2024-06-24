@@ -149,7 +149,7 @@ BOUTON NEW INGREDIENT
     font-weight: 900;
     transition: 0.5s;
 }
-#buttonAddNewLineIngredient i:hover{
+#buttonAddNewLineIngredient i:hover, #openIngredientForm:hover{
     background-color:#a2e97e ;
     transform: scale(1.05);
     transition: 0.5s;
@@ -178,7 +178,7 @@ BOUTON DELETE LIGNE INGREDIENT
     font-size: x-large;
     transition: 0.5s;
 }
-.buttonDeleteLine i:hover{
+.buttonDeleteLine i:hover {
     background-color: #fc5b53;
     transform: scale(1.05);
     transition: 0.5s;
@@ -188,6 +188,8 @@ FORM
 */
 .form-label{
     color: var(--main);
+    font-size: larger;
+    font-weight: 500;
 }
 
 #form {
@@ -325,6 +327,17 @@ DETAIL RECETTE
 }
 #cancelButton{
     background-color: #fc5b53;
+}
+
+#openIngredientForm{
+    border: none;
+    border-radius: 12px;
+    padding: 1%;
+    background-color: #bbeba3;
+    color: white;
+    font-weight: 700;
+    font-size: larger;
+    transition: 0.5s;
 }
 @media only screen and (max-width: 1100px) {
     #cardsBox{

@@ -4,7 +4,7 @@
 
 const boutonAddNewLine = document.getElementById("buttonAddNewLineIngredient").children[0];
 const tabButtonDelete = document.getElementsByClassName("buttonDeleteLine");
-const formIngredient = document.getElementById("formIngredient");
+const formIngredient = document.getElementById("formIngre");
 
 const modelNewLineIngredient = document.getElementById("ingredientBox");
 
@@ -22,14 +22,24 @@ updateEventListener();
 
 boutonAddNewLine.addEventListener("click",function () {
     insertNode=modelNewLineIngredient.cloneNode(true);
+    insertNode.querySelector("#floatingInputDisabled").value="";
     formIngredient.appendChild(insertNode);
     updateEventListener();
 })
-
+/**
+ * Partie la ge
+ */
 const buttonIngredientForm = document.getElementById("openIngredientForm");
+const buttonCancelButton = document.getElementById("cancelButton");
 const ingredientForm = document.getElementById("ingredientForm");
 
-buttonIngredientForm.addEventListener("click",()=>{
+buttonIngredientForm.addEventListener("click",(event)=>{
+    event.preventDefault();
+    ingredientForm.style.display="flex";
+});
 
+buttonCancelButton.addEventListener("click",()=>{
+    event.preventDefault();
+    ingredientForm.style.display="none";
 })
 
