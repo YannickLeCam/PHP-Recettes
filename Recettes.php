@@ -27,7 +27,7 @@ function createRecipeCard(PDO $mysqlClient):string{
         $timeCook = $recipe['timeCook'];
         $typeMeal = getTypeMealTabById($mysqlClient, $recipe['id_type'])[0]['typeMeal']; //create badge !
         $badgeTypeMeal = createBadge($typeMeal);
-        $instruction = mb_substr($recipe['instruction'], 0, 100, 'UTF-8'); //A voir pour ajouter un Alt dans la BDD
+        $instruction = mb_substr(html_entity_decode($recipe['instruction']), 0, 100, 'UTF-8'); //A voir pour ajouter un Alt dans la BDD
         if ($timeCook>1) {
             $minute="minutes";
         }else {

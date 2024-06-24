@@ -95,7 +95,7 @@ function createIngredientsList(array $ingredients):string {
     $htmlContent.="</ul>";
     return $htmlContent;
 }
-$instructions = $recipeDetail['recipe']['instruction'];   
+$instructions =  html_entity_decode($recipeDetail['recipe']['instruction']);
 $title = $recipeDetail['recipe']['name'];
 ?>
 <h1><?=$title.' '.createBadge($recipeDetail['recipe']['type']['typeMeal'])?></h1>
@@ -124,7 +124,7 @@ $title = $recipeDetail['recipe']['name'];
     </div>
 </div>
 <div id="buttonDetailBox">
-    <a href="" id="editButton"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></a>
+    <a href="./editRecette.php?id_recipe=<?=$recipeDetail['recipe']['id_recipe']?>" id="editButton"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></a>
     <a href="./gestionRecette.php?action=delete&id_recipe=<?=$recipeDetail['recipe']['id_recipe']?>" id="deleteButton"><i class="fa-solid fa-trash" style="color:#ffffff;"></i></a>
     <?php
         if ($recipeDetail['previous_recipe']!=null) {
