@@ -140,19 +140,32 @@ function checkDoubleIngredient(array $tabIdIngredient):bool{
     }
     return false;
 }
+// var_dump($_POST);
+// die();
 
+if (isset($_POST['submitBtn'])) {
 
-if (isset($_POST['submit'])) {
     $data = verifyFormData($mysqlClient);
+    
     if (isset($data['error'])) {
         setMessage("error", $data['error']);
         redirection("./NewRecette.php");
+        die;
     } else {
         insertData($mysqlClient, $data);
         redirection("./NewRecette.php");
+        die;
     }
 }
 
+if (isset($_GET['action'])) {
+    if ($_GET['action']=="delete") {
+        $id_recipe = filter_input(INPUT_GET, "id_recipe", FILTER_VALIDATE_INT);
+        deleteRecipe($mysqlClient,$id_recipe);
+        redirection("./Recettes.php");
+        die;
+    }
+}
 
 redirection();
 

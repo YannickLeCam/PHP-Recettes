@@ -240,10 +240,10 @@ function insertData($mysqlClient, $data) {
                     }
                 }
                 setMessage("success", "La recette a bien été enregistrée !");
-                redirection("./NewRecette.php");
+                return;
             } else {
                 setMessage("success", "La recette a bien été enregistrée ! (Sans ingrédients)");
-                redirection("./NewRecette.php");
+                return;
             }
         } else {
             setMessage("error", "Probleme lors de l'insertion dans la base de donnée (RECIPE) . . .");

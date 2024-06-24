@@ -48,7 +48,7 @@ function setIngredientsOptions(array $ingredients):string {
 ?>
 <h1>Entrez votre nouvelle Recette</h1>
 
-<form method="post" action="./gestionRecette.php?from=./NewRecette.php" enctype="multipart/form-data">
+<form id="recetteForm" method="post" action="./gestionRecette.php" enctype="multipart/form-data">
     <h2>Details recette</h2>
     <div id="form">
         <div class="d-flex" id="infoBase">
@@ -96,11 +96,11 @@ function setIngredientsOptions(array $ingredients):string {
         
         <h2>Instructions</h2>
         <div id="instructionsForm">
-            <div id="floatingTextarea2">
-            </div>
+            <div id="floatingTextarea2"></div>
+            <input type="hidden" name="instructions">
         </div>
     </div>
-    <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+    <input name="submitBtn" type="submit" class="btn btn-primary" value="Submit">
 </form>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
@@ -108,12 +108,19 @@ function setIngredientsOptions(array $ingredients):string {
             placeholder: 'Entrer les instructions de la recettes',
             theme: 'snow'
         });
+        const recipeForm = document.getElementById('recetteForm');
+        function handleSubmit(event) {
+        //event.preventDefault(); // Prevent the default form submission
 
-        function handleSubmit() {
-            var content = quill.root.innerHTML;
-            document.querySelector('[name="instructions"]').value = content;
-            return true; // Proceed with form submission
-        }
+        var content = quill.root.innerHTML;
+        console.log("Quill content:", content); // Debugging log
+        document.querySelector('[name="instructions"]').value = content;
+        console.log("Hidden input value:", document.querySelector('[name="instructions"]').value); // Debugging log
+        // Manually submit the form
+        recipeForm.submit();
+    }
+    
+    recipeForm.addEventListener('submit', handleSubmit);
     </script>
 <script src="JS/scriptNewRecette.js"></script>
 <?php

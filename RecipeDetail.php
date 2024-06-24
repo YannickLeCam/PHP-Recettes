@@ -95,7 +95,7 @@ function createIngredientsList(array $ingredients):string {
     $htmlContent.="</ul>";
     return $htmlContent;
 }
-
+$instructions = $recipeDetail['recipe']['instruction'];   
 $title = $recipeDetail['recipe']['name'];
 ?>
 <h1><?=$title.' '.createBadge($recipeDetail['recipe']['type']['typeMeal'])?></h1>
@@ -118,14 +118,14 @@ $title = $recipeDetail['recipe']['name'];
     </div>
     <div id="instructionsBox">
         <h2>Instructions :</h2>
-        
-        <?="<p>".$recipeDetail['recipe']['instruction']."</p>"?>  
+        <div id="instructions"></div>
+        <?=$instructions?>  
     
     </div>
 </div>
 <div id="buttonDetailBox">
     <a href="" id="editButton"><i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i></a>
-    <a href="" id="deleteButton"><i class="fa-solid fa-trash" style="color:#ffffff;"></i></a>
+    <a href="./gestionRecette.php?action=delete&id_recipe=<?=$recipeDetail['recipe']['id_recipe']?>" id="deleteButton"><i class="fa-solid fa-trash" style="color:#ffffff;"></i></a>
     <?php
         if ($recipeDetail['previous_recipe']!=null) {
             echo '<a id="prevButton" href="./RecipeDetail.php?id_recipe='.$recipeDetail['previous_recipe']['id_recipe'].'"> ←  '.$recipeDetail['previous_recipe']['name'].'</a>';
@@ -135,7 +135,6 @@ $title = $recipeDetail['recipe']['name'];
         }
     ?>
 </div>
-
 <?php
 $content = ob_get_clean();
 require_once './template.php';
